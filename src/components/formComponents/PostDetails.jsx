@@ -43,7 +43,7 @@ export default function PostDetails({jobtype=[]}) {
               {...register("fullPostcode", {
                 required: "Full postcode is required",
               })}
-              className="text-black-4 font-medium tracking-wider px-2 placeholder-black-3/80 w-full"
+              className="text-black font-medium tracking-wider px-2 placeholder-black-3/80 w-full"
               placeholder="E.g. SE1 2AB"
             />
           </div>
@@ -77,7 +77,7 @@ export default function PostDetails({jobtype=[]}) {
 
       {/* Permit Section */}
       <div className="relative min-h-32 w-full rounded-3xl border-2 border-primary px-10 py-10">
-        <span className="absolute -top-[1.3rem] left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-2 font-semibold text-white-1">
+        <span className="absolute -top-[1.3rem] left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-2 font-semibold text-white">
           Permit check
         </span>
 

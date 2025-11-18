@@ -92,7 +92,7 @@ return (
                   }}
                   classNames={{
                     menu: () =>
-                      "bg-white-1 shadow-lg border rounded-md z-[9999] tracking-wider w-full",
+                      "bg-white shadow-lg border rounded-md z-[9999] tracking-wider w-full",
                     menuList: () =>
                       "max-h-48 p-4 overflow-y-scroll scrollbar-thin scrollbar-thumb-primary scrollbar-track-gray-200",
                     option: ({ isFocused, isSelected }) =>

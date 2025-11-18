@@ -6,7 +6,7 @@ export default function Cardskip({ item, isSelected, onClick }) {
   return (
     <div 
       className={cn(
-        " group min-h-[16rem] flex-1 max-w-[18rem]space-y-8  rounded-xl  shadow-md  bg-white-1 p-8  ",
+        " group min-h-[16rem] flex-1 max-w-[18rem]space-y-8  rounded-xl  shadow-md  bg-white p-8  ",
         { "bg-primary/10 ": isSelected },
       )}
     >
@@ -27,7 +27,7 @@ export default function Cardskip({ item, isSelected, onClick }) {
         </div>
         <button
           onClick={onClick}
-          className=" rounded-full bg-primary/80 px-4 py-2  cursor-pointer  text-white-1  group-hover:bg-primary/90 "
+          className=" rounded-full bg-primary/80 px-4 py-2  cursor-pointer  text-white  group-hover:bg-primary/90 "
         >
           Buy Now
         </button>

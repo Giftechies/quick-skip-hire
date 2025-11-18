@@ -43,7 +43,7 @@ export const Skipcard = ({ item, onClick, setValue }) => {
   };
 
   return (
-    <div className="min-h-[25rem] w-[18rem] rounded-xl shadow-md bg-white-1 p-6">
+    <div className="min-h-[25rem] w-[18rem] rounded-xl shadow-md bg-white p-6">
       <div  onClick={handleBuy}  className="img mx-auto w-full cursor-pointer overflow-hidden rounded-3xl">
         <img
           src="/img/innerimg/truck.jpg"
@@ -54,7 +54,7 @@ export const Skipcard = ({ item, onClick, setValue }) => {
 
       <div className="mt-4 flex flex-col items-center justify-center gap-4">
         <div>
-          <span  onClick={handleBuy} className="h5 font-oswald  cursor-pointer font-semibold text-primary group-hover:text-white-1">
+          <span  onClick={handleBuy} className="h5 font-oswald  cursor-pointer font-semibold text-primary group-hover:text-white">
             {item.label}
           </span>
         </div>
@@ -72,7 +72,7 @@ export const Skipcard = ({ item, onClick, setValue }) => {
           <span className="h6">/Tones</span>
         </div>
 
-        <div className="h6 rounded-full px-4 py-2 group-hover:text-white-1">
+        <div className="h6 rounded-full px-4 py-2 group-hover:text-white">
           <span>£</span>
           <span>{totalprice}</span>
           <span>(+ VAT)</span>
@@ -80,7 +80,7 @@ export const Skipcard = ({ item, onClick, setValue }) => {
 
         <button
           onClick={handleBuy}
-          className="rounded-full bg-primary/80 px-4 py-2 text-white-1 group-hover:bg-white-1 group-hover:text-primary"
+          className="rounded-full bg-primary/80 px-4 py-2 text-white group-hover:bg-white group-hover:text-primary"
         >
           Buy Now
         </button>

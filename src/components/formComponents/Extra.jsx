@@ -122,7 +122,7 @@ export default function Extra({EXTRAS}) {
                { EXTRAS.map((extra,id) => (
                   <div
                     key={id}
-                    className="flex items-center justify-between rounded-lg border bg-gray-100 p-3 even:bg-white-1"
+                    className="flex items-center justify-between rounded-lg border bg-gray-100 p-3 even:bg-white"
                   >
                     {/* Checkbox + Label */}
                     <label className="flex items-center gap-3">

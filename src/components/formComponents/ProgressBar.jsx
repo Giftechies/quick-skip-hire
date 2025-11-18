@@ -25,9 +25,9 @@ export default function ProgressBar({ className,currentStep, setCurrentStep, ste
                 {
                   "cursor-pointer": isClickable,
                   "cursor-not-allowed opacity-50": !isClickable, // 🚫 disable future steps
-                  "bg-primary text-white-1": idx === currentStep,
-                  "bg-green-600 text-white-1": idx < currentStep,
-                  "bg-gray-300 text-black-4!": idx > currentStep,
+                  "bg-primary text-white": idx === currentStep,
+                  "bg-green-600 text-white": idx < currentStep,
+                  "bg-gray-300 text-black!": idx > currentStep,
                 }
               )}
             >

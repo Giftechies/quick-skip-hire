@@ -101,7 +101,7 @@ const BoonkingOnline = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="container  z-30  py-8   flex flex-col items-center gap-8 rounded-lg bg-white-1  shadow-md"
+          className="container  z-30  py-8   flex flex-col items-center gap-8 rounded-lg bg-white  shadow-md"
         >
           <h1 className="h2 title-animation text-center  font-oswald     ">
             Your Skip, Ready to Hire
@@ -125,7 +125,7 @@ const BoonkingOnline = () => {
               <button
                 type="button"
                 onClick={prevStep}
-                className="rounded-full bg-primary px-4 py-2 text-white-1"
+                className="rounded-full bg-primary px-4 py-2 text-white"
               >
                 Previous
               </button>
@@ -135,14 +135,14 @@ const BoonkingOnline = () => {
               <button
                 type="button"
                 onClick={nextStep}
-                className=" rounded-full bg-primary px-8 py-2 text-white-1"
+                className=" rounded-full bg-primary px-8 py-2 text-white"
               >
                 Next
               </button>
             ) : (
               <button
                 type="submit"
-                className=" rounded-full bg-green-600 px-4 py-2 text-white-1"
+                className=" rounded-full bg-green-600 px-4 py-2 text-white"
               >
                 Submit
               </button>
