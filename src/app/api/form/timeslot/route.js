@@ -1,115 +1,75 @@
 import { NextResponse } from "next/server";
-import TimeSlotDefinition from "@/models/TimeSlotDefinition";
-import connectDb from "@/lib/connectDb";
-
-// Strict "HH:mm" format validation
-const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+import {ConnectDb} from "@/app/helpers/DB/db";
+import TimeSlotDefinition from "@/app/helpers/models/TimeSlotsDefinition";
 
 export async function POST(req) {
   try {
-    await connectDb();
-
+    
+    await ConnectDb();
     const body = await req.json();
-    const { dayOfWeek, startTime, endTime, label } = body;
+    const { dayOfWeek, startTime, endTime } = body;
 
-    // 1. Validate required fields
-    if (!dayOfWeek || !startTime || !endTime) {
+    const toMinutes = (time) => {
+      const [h, m] = time.split(":");
+      return Number(h) * 60 + Number(m);
+    };
+
+    const startMinutes = toMinutes(startTime);
+    const endMinutes = toMinutes(endTime);
+
+    if (endMinutes <= startMinutes) {
       return NextResponse.json(
-        { success: false, message: "dayOfWeek, startTime and endTime are required." },
+        { error: "End time must be greater than start time" },
         { status: 400 }
       );
     }
 
-    // 2. Validate HH:mm strict format
-    if (!timeRegex.test(startTime) || !timeRegex.test(endTime)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid time format. Use 'HH:mm' in 24-hour format." },
-        { status: 400 }
-      );
-    }
-
-    // Create instance (pre-validate computes minutes)
-    const slot = new TimeSlotDefinition({
+    // Check overlapping slots
+    const conflict = await TimeSlotDefinition.findOne({
       dayOfWeek,
+      startMinutes: { $lt: endMinutes },
+      endMinutes: { $gt: startMinutes },
+    });
+
+    if (conflict) {
+      return NextResponse.json(
+        { error: "Time range overlaps with an existing slot" },
+        { status: 400 }
+      );
+    }
+
+    const slot = await TimeSlotDefinition.create({
+      dayOfWeek,
+      startMinutes,
+      endMinutes,
       startTime,
       endTime,
-      label
     });
 
-    // Trigger validation → computes startMinutes & endMinutes
-    await slot.validate();
-
-    // 3. Check overlap
-    const isOverlapping = await TimeSlotDefinition.overlapsExisting({
-      dayOfWeek,
-      startMinutes: slot.startMinutes,
-      endMinutes: slot.endMinutes
-    });
-
-    if (isOverlapping) {
-      return NextResponse.json(
-        { success: false, message: "Slot overlaps with an existing slot for this day." },
-        { status: 400 }
-      );
-    }
-
-    // 4. Save slot
-    const saved = await slot.save();
-
-    return NextResponse.json(
-      { success: true, message: "Timeslot created successfully", data: saved },
-      { status: 201 }
-    );
-
-  } catch (error) {
-    console.error("Create Timeslot Error:", error);
-
-    return NextResponse.json(
-      { success: false, message: "Internal Server Error", error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, data: slot }, { status: 201 });
+  } catch (err) {
+    console.log("Error creating timeslot:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
 
 
 
-// src/app/api/slots/route.js
 
-// ... (Existing imports: NextResponse, TimeSlotDefinition, connectDb)
-
-export async function GET(req) {
+export async function GET() {
   try {
-    await connectDb();
+    await ConnectDb();
 
-    // 1. Get query parameters from the request URL
-    const { searchParams } = new URL(req.url);
-    const dayFilter = searchParams.get('dayOfWeek');
+    const slots = await TimeSlotDefinition
+      .find()
+      .sort({ dayOfWeek: 1, startMinutes: 1 });
 
-    const query = {};
-    if (dayFilter) {
-      // 2. Build query object if a day filter is present
-      query.dayOfWeek = dayFilter;
-    }
-
-    // 3. Fetch slots based on the query, sorted by start time
-    const slots = await TimeSlotDefinition.find(query).sort({ startMinutes: 1 });
-
-    if (slots.length === 0 && dayFilter) {
-      return NextResponse.json(
-        { success: true, message: `No slots found for ${dayFilter}.`, data: [] },
-        { status: 200 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: true, message: "Timeslots retrieved successfully", data: slots },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Get Timeslots Error:", error);
-    return NextResponse.json(
-      { success: false, message: "Internal Server Error", error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, data: slots });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+
+
+
+

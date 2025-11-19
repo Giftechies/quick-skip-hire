@@ -1,133 +1,91 @@
-// src/app/api/slots/[id]/route.js
-
 import { NextResponse } from "next/server";
+import ConnectDb from "@/lib/ConnectDb";
 import TimeSlotDefinition from "@/models/TimeSlotDefinition";
-import connectDb from "@/lib/connectDb";
-import mongoose from "mongoose";
 
-const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-
-// Note: Using { params } to access the dynamic [id] segment
-export async function PUT(req, { params }) {
+export async function GET(req, { params }) {
   try {
-    const { id } = params;
+    await ConnectDb();
 
-    // 1. Validate ID format
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid slot ID format." },
-        { status: 400 }
-      );
-    }
+    const { day } = params;
 
-    await connectDb();
-    const body = await req.json();
-    const { dayOfWeek, startTime, endTime } = body;
+    const slots = await TimeSlotDefinition.find({
+      dayOfWeek: day.toLowerCase()
+    }).sort({ startMinutes: 1 });
 
-    // 2. Fetch the existing slot
-    const existingSlot = await TimeSlotDefinition.findById(id);
-    if (!existingSlot) {
-      return NextResponse.json(
-        { success: false, message: "Timeslot not found." },
-        { status: 404 }
-      );
-    }
-
-    // Determine the values to check against (use existing if not provided)
-    const newDayOfWeek = dayOfWeek || existingSlot.dayOfWeek;
-    const newStartTime = startTime || existingSlot.startTime;
-    const newEndTime = endTime || existingSlot.endTime;
-
-    // 3. Validate new time format if provided
-    if (startTime && !timeRegex.test(newStartTime)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid startTime format. Use 'HH:mm'." },
-        { status: 400 }
-      );
-    }
-    if (endTime && !timeRegex.test(newEndTime)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid endTime format. Use 'HH:mm'." },
-        { status: 400 }
-      );
-    }
-    
-    // 4. Create a temporary instance to compute minutes and run Mongoose validation
-    const tempSlot = new TimeSlotDefinition({ 
-        dayOfWeek: newDayOfWeek, 
-        startTime: newStartTime, 
-        endTime: newEndTime 
-    });
-    await tempSlot.validate(); // Computes startMinutes & endMinutes
-
-    // 5. Check overlap (EXCLUDING the current slot's ID)
-    const isOverlapping = await TimeSlotDefinition.overlapsExisting({
-      dayOfWeek: newDayOfWeek,
-      startMinutes: tempSlot.startMinutes,
-      endMinutes: tempSlot.endMinutes,
-      excludeId: id, // <--- This is the crucial part for updates
-    });
-
-    if (isOverlapping) {
-      return NextResponse.json(
-        { success: false, message: "Updated slot overlaps with another slot for this day." },
-        { status: 400 }
-      );
-    }
-
-    // 6. Update and save
-    const updatedSlot = await TimeSlotDefinition.findByIdAndUpdate(
-      id,
-      body,
-      { new: true, runValidators: true } // new: returns the updated doc; runValidators: triggers the pre-save hooks
-    );
-
-    return NextResponse.json(
-      { success: true, message: "Timeslot updated successfully", data: updatedSlot },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Update Timeslot Error:", error);
-    return NextResponse.json(
-      { success: false, message: "Internal Server Error", error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, data: slots });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
 
 
-export async function DELETE(req, { params }) {
-  try {
-    const { id } = params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+i
+
+export async function PUT(req, { params }) {
+  try {
+    await ConnectDb();
+    const { id } = params;
+    const { startTime, endTime } = await req.json();
+
+    const toMinutes = (t) => {
+      const [h, m] = t.split(":");
+      return Number(h) * 60 + Number(m);
+    };
+
+    const startMinutes = toMinutes(startTime);
+    const endMinutes = toMinutes(endTime);
+
+    if (endMinutes <= startMinutes) {
       return NextResponse.json(
-        { success: false, message: "Invalid slot ID format." },
+        { error: "End time must be greater than start time" },
         { status: 400 }
       );
     }
 
-    await connectDb();
+    const existing = await TimeSlotDefinition.findById(id);
+    if (!existing) {
+      return NextResponse.json({ error: "Slot not found" }, { status: 404 });
+    }
 
-    // Find and delete the slot
-    const deletedSlot = await TimeSlotDefinition.findByIdAndDelete(id);
+    // check overlap with other slots
+    const conflict = await TimeSlotDefinition.findOne({
+      _id: { $ne: id },
+      dayOfWeek: existing.dayOfWeek,
+      startMinutes: { $lt: endMinutes },
+      endMinutes: { $gt: startMinutes },
+    });
 
-    if (!deletedSlot) {
+    if (conflict) {
       return NextResponse.json(
-        { success: false, message: "Timeslot not found." },
-        { status: 404 }
+        { error: "Slot time overlaps with another slot" },
+        { status: 400 }
       );
     }
 
-    return NextResponse.json(
-      { success: true, message: "Timeslot deleted successfully" },
-      { status: 200 }
+    const updated = await TimeSlotDefinition.findByIdAndUpdate(
+      id,
+      { startTime, endTime, startMinutes, endMinutes },
+      { new: true }
     );
-  } catch (error) {
-    console.error("Delete Timeslot Error:", error);
-    return NextResponse.json(
-      { success: false, message: "Internal Server Error", error: error.message },
-      { status: 500 }
-    );
+
+    return NextResponse.json({ success: true, data: updated });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+
+
+export async function DELETE(req, { params }) {
+  try {
+    await ConnectDb();
+    const { id } = params;
+
+    await TimeSlotDefinition.findByIdAndDelete(id);
+
+    return NextResponse.json({ success: true, message: "Slot deleted" });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
