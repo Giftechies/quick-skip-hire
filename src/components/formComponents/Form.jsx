@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, } from "react-hook-form";
 import PostCode from "./Postcode";
 import Extra from "./Extra";
 import Cart from "./Cart";
@@ -8,7 +8,7 @@ import PostDetails from "./PostDetails";
 import Skip from "./Skip";
 import ProgressBar from "./ProgressBar";
 import { useRouter } from "next/navigation";
-import { Fetchjobtype, Fetchextra } from "@/app/apiCalls/form";
+import { Fetchjobtype, Fetchextra,FetchTimeSlots } from "@/app/apiCalls/form";
 
 const BoonkingOnline = () => {
   // 🟢 Default form values
@@ -16,6 +16,7 @@ const BoonkingOnline = () => {
     postcodeArea: "",
     fullPostcode: "",
     deliveryDate: "",
+    timeSlot: "",
     permitOnHighway: false,
     jobType: "",
     skipSize: [],
@@ -32,12 +33,15 @@ const BoonkingOnline = () => {
   // let fetchextra =[]
   const [fetchjob, setfetchjob] = useState([]);
   const [fetchextra, setfetchextra] = useState([]);
+  const [fetchedTimeSlots, setFetchedTimeSlots] = useState([]);
   useEffect(() => {
     (async () => {
       const res = await Fetchjobtype();
       setfetchjob(res.data);
 
       const extrares = await Fetchextra();
+      const fetchtime = await FetchTimeSlots();
+      setFetchedTimeSlots(fetchtime.data);
 
     
       if (
@@ -52,15 +56,13 @@ const BoonkingOnline = () => {
   }, []);
 
   const { register, handleSubmit } = useForm();
-
   const navigate = useRouter();
-
   const methods = useForm({ defaultValues });
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
     { title: "Postcode", component: <PostCode /> },
-    { title: "Details", component: <PostDetails jobtype={fetchjob} /> },
+    { title: "Details", component: <PostDetails jobtype={fetchjob} slots={fetchedTimeSlots} /> },
     {
       title: "Skip Size",
       component: <Skip goToNextStep={() => setCurrentStep(currentStep + 1)} />,
@@ -70,14 +72,9 @@ const BoonkingOnline = () => {
    
   ];
   const nextStep = async () => {
-    // Validate current step before moving forward
     const isValid = await methods.trigger(); // for now: validate all fields
-    // if(jobType)
     const type = methods.watch("jobType");
-    
-    
     if (type.trim().toLowerCase() === "skip collection") {
-      console.log("Redirecting to collection page:", type);
       navigate.push("/collection"); // <-- redirects user
       return; // stop further steps
     }

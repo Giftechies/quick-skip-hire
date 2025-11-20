@@ -7,4 +7,5 @@
         { label: "Roll om Roll Off", path: "/quick-skip-hire-admin/roll-&-roll" },
         { label: "Default Rates", path: "/quick-skip-hire-admin/setting-rate" },
         { label: "Default Roll on Roll Off", path: "/quick-skip-hire-admin/setting-roll" },
+        { label: "Time Slot", path: "/quick-skip-hire-admin/timeslot" },
  ]
