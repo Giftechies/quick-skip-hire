@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import ConnectDb from "@/lib/ConnectDb";
-import TimeSlotDefinition from "@/models/TimeSlotDefinition";
+import {ConnectDb} from "@/app/helpers/DB/db";
+import TimeSlotDefinition from "@/app/helpers/models/TimeSlotsDefinition-daywise";
 
 export async function GET(req, { params }) {
   try {
