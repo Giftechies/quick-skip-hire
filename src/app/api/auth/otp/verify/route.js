@@ -2,8 +2,9 @@
 // api/auth/otp/verify/route.js
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
+// import crypto from "crypto";
 import { serialize } from "cookie";
+import jwt from "jsonwebtoken"
 
 import { ConnectDb } from "@/app/helpers/DB/db";
 import User from "@/app/helpers/models/user";
@@ -62,7 +63,17 @@ export async function POST(request) {
       await user.save();
     }
 
-    const token = crypto.randomBytes(32).toString("hex");
+    // const token = crypto.randomBytes(32).toString("hex");
+
+    const token = jwt.sign({
+      userId: user._id,
+      role: user.role,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      name: `${user.firstName} ${user.lastName}`
+    }, process.env.JWT_SECRET, {
+      expiresIn: `${TOKEN_LIFE_DAYS}d`
+    })
 
     const cookie = serialize(SESSION_COOKIE, token, {
       httpOnly: true,
@@ -76,7 +87,13 @@ export async function POST(request) {
       JSON.stringify({
         success: true,
         message: "Login successful",
-        role: user.role,
+        user:{
+         userId: user._id,
+          name:`${user.firstName} ${user.lastName}`,
+          email: user.email,
+          phone: user.phoneNumber,
+          role: user.role,
+        }
       }),
       {
         status: 200,

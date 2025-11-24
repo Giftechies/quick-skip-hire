@@ -1,4 +1,34 @@
 
+
+
+export async function RequestOtp (email){
+    try {
+        const res = await fetch('/api/auth/otp/send', {
+            method: 'POST',
+            body: JSON.stringify({email}),
+        })
+        
+        const data = await res.json()
+        if (!res.ok) {
+            return {
+                success:false,
+                message: data.message || 'Failed to request OTP'
+            }
+        }
+        return {
+            success:true,
+            message: data.message || 'OTP sent successfully'
+        }
+        
+    } catch (error) {
+        return {
+            success:false,
+            message: error.message || 'Failed to request OTP'
+        }
+        
+    }
+}
+
 export async function FetchpostCode() {
     try {
         const res = await fetch(`/api/form/postcode`, {

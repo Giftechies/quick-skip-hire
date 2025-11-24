@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { RequestOtp } from "@/app/apiCalls/form";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -15,14 +16,15 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const data = await loginuser(email);
+      const data = await RequestOtp(email);
 
       if (data?.success) {
-    
-        // router.push("/admin");
+   
+  router.push(`/verify-otp?email=${email}`);
+
       } else {
         
-        alert(data?.message || "Login failed");
+       toast.error(data.message);
       }
     } catch (err) {
     

@@ -13,7 +13,7 @@ export const ConnectDb = async () => {
 
   try {
     const connection = await mongoose.connect(uri, {
-      dbName: "css_constructions",
+      dbName: "quick-skip-hire",
       bufferCommands: false,
     });
 
