@@ -1,14 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { loginuser } from "../controllers/loginuser";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false); // ✅ loading state
 
   const router = useRouter();
@@ -18,11 +15,11 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      const data = await loginuser({ username, password });
+      const data = await loginuser(email);
 
       if (data?.success) {
     
-        router.push("/admin");
+        // router.push("/admin");
       } else {
         
         alert(data?.message || "Login failed");
@@ -40,7 +37,7 @@ export default function LoginForm() {
       {/* Background image */}
       <div className="absolute inset-0 h-full w-full overflow-hidden z-0">
         <Image
-          src="/img/innerimg/skip-hire.jpg"
+          src="https://images.unsplash.com/photo-1599995903128-531fc7fb694b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29uc3RydWN0aW9uJTIwc2l0ZXxlbnwwfHwwfHx8MA%3D%3D"
           alt="background"
           fill
           className="object-cover object-right"
@@ -51,42 +48,36 @@ export default function LoginForm() {
       <div className="absolute inset-0 h-full w-full bg-black/50 z-10" />
 
       {/* Form container */}
-      <div className="h-[300px] w-[500px] m-auto z-30 border border-white/20 p-6 rounded-md text-white bg-white/10 backdrop-blur-sm">
-        <form onSubmit={handleForm} className="flex flex-col gap-6 text-white ">
-          <div className="log w-24 mx-auto">
-            <Image alt="logo" src={"/img/logo/nav-logo.svg"} width={200} height={200} />
+      <div className="h-[250px] w-[500px] m-auto z-30 border border-white/20 p-6 rounded-md text-white bg-white/10 backdrop-blur-sm">
+        <form onSubmit={handleForm} className="flex flex-col gap-2 text-white ">
+          <div className="log w-FULL mx-auto">
+            {/* <Image alt="logo" src={"/img/logo/nav-logo.svg"} width={200} height={200} /> */}
+            QUICK SKIP HIRE
+
           </div>
-
+           <label htmlFor="Email" className="text-sm font-medium">Email</label>  
           <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            name="Email"
+            id="Email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 rounded-md bg-transparent border"
           />
 
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 rounded-md bg-transparent border"
-          />
+          
 
-          <Button type="submit" disabled={loading} className="flex items-center justify-center gap-2">
+          <Button type="submit" disabled={loading} className=" mt-6 flex items-center justify-center gap-2">
             {loading ? (
               <>
                 <span
                   className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
                 ></span>
-                Logging in...
+                Sending...
               </>
             ) : (
-              "Login"
+              "Send OTP"
             )}
           </Button>
         </form>
