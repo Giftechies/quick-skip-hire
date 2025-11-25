@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export default function Cart() {
-  const { watch } = useFormContext();
+  const { watch,setValue } = useFormContext();
   const skipsize = watch("skipSize") || {};
   const extras = watch("extras") || {};
 
@@ -34,6 +34,10 @@ export default function Cart() {
 
   // Final total
   const total = subtotal + vat;
+
+useEffect(() => {
+  setValue("totalcost", total); // 🔥 sync total → form
+}, [total, setValue]);
 
   return (
        <section>

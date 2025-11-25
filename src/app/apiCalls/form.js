@@ -221,3 +221,12 @@ export async function DeleteTimeSlot(id) {
         };
     }
 }
+
+
+export async function checkout (){
+    try {
+        
+    } catch (error) {
+        
+    }
+}

@@ -21,25 +21,25 @@ export default function Breadcrumb() {
     >
       {/* Home Link */}
       <Link
-        href="/"
-        className="text-white hover:text-[var(--primary)] cursor-pointer whitespace-nowrap"
+        href="https://www.quickskiphire.com/"
+        className="text-white hover:text-gray-400  cursor-pointer whitespace-nowrap"
       >
         Home
       </Link>
 
       {/* Crumbs */}
       {crumbs?.map((crumb, index) => (
-        <div key={index} className="flex items-center space-x-1">
+        <div key={index} className="flex text-white items-center space-x-1">
           <ChevronRight className="w-3.5 h-3.5" />
           {index === crumbs.length - 1 ? (
-            <span className="text-gray-300 font-medium truncate max-w-full sm:max-w-md">
+            <span className=" font-medium truncate max-w-full sm:max-w-md">
               {crumb.label}
             </span>
           ) : (
             // Use real href so Next.js can handle the navigation natively
             <Link
               href={crumb.href}
-              className="text-white hover:text-[var(--primary)] transition-colors cursor-pointer whitespace-nowrap"
+              className="text-white hover:text-gray-400 transition-colors cursor-pointer whitespace-nowrap"
             >
               {crumb.label}
             </Link>

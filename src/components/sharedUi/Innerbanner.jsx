@@ -5,29 +5,14 @@ import Breadcrumb from "@/components/sharedUi/Breadcrumb";
 
 export default function Banner({imgpath,pagename}){
     return(
-          <section
-          style={{backgroundImage:`url(${imgpath})`}}
-          
-          className="  border-2 border-white homebanner relative overflow-hidden w-full  bg-cover bg-center  object-cover md:p-[70px] md:m-5   md:rounded-3xl before:absolute before:inset-0 before:bg-black/60  xxl:mx-10">
-        
-      <div className="container overflow-hidden relative py-20 md:p-20 text-white sm:pt-25  ">
-         
-        <div className=" place-items-center  ">
-          <div className="max-md:spt60px  flex-center  flex-col text-center   ">
-            <h1 className="h1 mb-3  mt-3 font-medium capitalize  z-40  ">
-            {pagename}
-            </h1>
-            
-          
-           
-              <Breadcrumb/>
-           
-            
-          </div>
-        </div>
-      
-   
-      </div>
-    </section>
+          <section className=" relative inner-banner z-0  p-5 w-[95%] rounded-xl mx-auto mt-8 h-96 border-2   bg-no-repeat bg-center bg-cover overflow-hidden " style={{backgroundImage:`url(${imgpath || "/banner/inner-banner.avif"})`}}>
+            <div className=" absolute inset-0 -z-10 bg-black/50 " />
+            <div className=" container  h-full flex flex-col items-center justify-center " >
+              <h2 className="text-4xl font-bold text-white mb-4 capitalize ">{pagename || "Page NOt found"}</h2>
+              <Breadcrumb  />
+            </div>
+
+
+          </section>
     )
 }

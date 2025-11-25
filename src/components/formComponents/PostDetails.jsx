@@ -110,10 +110,9 @@ export default function PostDetails({ jobtype = [], slots = [] }) {
                     slots.map((slot, idx) => (
                       <SelectItem
                         key={idx}
-                        value={`${slot.startTime}-${slot.endTime}`}
+                        value={`${slot.startTime}${slot.startSession} - ${slot.endTime}${slot.endSession}`}
                       >
-                        {slot.startTime} {slot.startSession} - {slot.endTime}{" "}
-                        {slot.endSession}
+                        {slot.startTime}{slot.startSession} - {slot.endTime}{slot.endSession}
                       </SelectItem>
                     ))
                   ) : (
@@ -144,7 +143,7 @@ export default function PostDetails({ jobtype = [], slots = [] }) {
             <label
               className={cn(
                 "cursor-pointer h6 rounded-full border-2 border-primary px-6 py-2 font-semibold transition-colors",
-                { "bg-primary/10 text-primary": selectedPermit === "Yes" }
+                { "bg-gray-300 text-primary": selectedPermit === "Yes" }
               )}
             >
               <input
@@ -185,7 +184,7 @@ export default function PostDetails({ jobtype = [], slots = [] }) {
 
           {/* Logic: Show P Tag on Yes Click */}
           {selectedPermit === "Yes" && (
-            <div className="w-full md:w-[60%] bg-zinc-100 mt-8 rounded-lg p-6 text-center animate-in fade-in slide-in-from-top-2">
+            <div className="w-full md:w-[60%] bg-zinc-100 mt-8 rounded-lg p-6  animate-in fade-in slide-in-from-top-2">
               <p className="font-medium text-zinc-800">
                 As your skip requires a licence to be kept on the road, please
                 call the number below so we can get the correct information from
@@ -193,9 +192,9 @@ export default function PostDetails({ jobtype = [], slots = [] }) {
               </p>
               <a
                 href="tel:1234657"
-                className="inline-flex items-center gap-2 text-primary h4 mt-3 font-oswald hover:underline"
+                className="inline-flex justify-center items-center gap-2 text-primary h5 mt-3 font-oswald hover:underline"
               >
-                <Phone size={30} />
+                <Phone size={20} />
                 1234657
               </a>
             </div>

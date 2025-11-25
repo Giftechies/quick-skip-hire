@@ -11,7 +11,7 @@ const OrderSchema = new mongoose.Schema(
     },
 
     // FRONTEND PAYLOAD FIELDS
-    totalamount: Number,     // Note: frontend sends "totalamount", not "totalAmount"
+    totalcost: Number,     // Note: frontend sends "totalamount", not "totalAmount"
     customer: {
       name: String,
       phone: String,
@@ -35,6 +35,7 @@ const OrderSchema = new mongoose.Schema(
       size: String,
       timeslot: String,
     },
+    timeSlot: String,
 
     status: {
       type: String,

@@ -9,6 +9,7 @@ import Skip from "./Skip";
 import ProgressBar from "./ProgressBar";
 import { useRouter } from "next/navigation";
 import { Fetchjobtype, Fetchextra,FetchTimeSlots } from "@/app/apiCalls/form";
+import UserInfo from "./UserInfo";
 
 const BoonkingOnline = () => {
   // 🟢 Default form values
@@ -19,14 +20,14 @@ const BoonkingOnline = () => {
     timeSlot: "",
     permitOnHighway: false,
     jobType: "",
-    skipSize: [],
-    extras: [],
-    cart: [],
+    skipSize: {},
+    extras: {},
+    totalcost: null,
     customer: {
-      name: "",
-      phone: "",
+      lastName: "",
+      firstName: "",
+      phoneNumber: "",
       email: "",
-      address: "",
     },
   };
 
@@ -55,7 +56,7 @@ const BoonkingOnline = () => {
     })();
   }, []);
 
-  const { register, handleSubmit } = useForm();
+  // const { register, handleSubmit } = useForm();
   const navigate = useRouter();
   const methods = useForm({ defaultValues });
   const [currentStep, setCurrentStep] = useState(0);
@@ -68,6 +69,7 @@ const BoonkingOnline = () => {
       component: <Skip goToNextStep={() => setCurrentStep(currentStep + 1)} />,
     },
     { title: "Extras", component: <Extra EXTRAS={fetchextra} /> },
+    { title: "UserInfo", component: <UserInfo /> },
     { title: "Cart", component: <Cart /> },
    
   ];
@@ -81,6 +83,7 @@ const BoonkingOnline = () => {
     if (isValid && currentStep < steps.length - 1) {
       setCurrentStep((s) => s + 1);
     }
+   
   };
 
   const prevStep = () => {
@@ -90,8 +93,10 @@ const BoonkingOnline = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("✅ Final submit:", data);
-    // call API or payment gateway here
+    console.log("Form Data Submitted: ", data);
+   if(currentStep === steps.length -1){
+    console.log("Final form data submitted: ", data);
+   }
   };
   return (
     <>

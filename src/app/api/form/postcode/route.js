@@ -17,7 +17,7 @@ export async function POST(req) {
 export async function GET() {
   try {
     await ConnectDb();
-    const postcodes = await Postcode.find({});
+    const postcodes = await Postcode.find({}).sort({postcode:1});
     return new Response(JSON.stringify(postcodes), { status: 200 });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });

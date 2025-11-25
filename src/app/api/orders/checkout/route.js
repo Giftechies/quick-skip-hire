@@ -22,10 +22,17 @@ export async function POST(req) {
     } =  await req.json()
 
     // ============== 1️⃣ VALIDATION ==============
-    if (!customer?.email) {
+    if (!customer?.email || !customer.firstName) {
    
     return NextResponse.json(
-        { success: false, message: 'Customer email is required.' },
+        { success: false, message: 'Customer name and email  is required.' },
+        { status: 400 }
+      );
+    }
+
+    if(!totalamount || totalamount <= 0 || isNaN(totalamount) ||deliveryDate ==='' || deliveryDate === '' || Object.keys(extras).length === 0 || Object.keys(extras).length === 0  ){ 
+      return NextResponse.json(
+        { success: false, message: 'Insuficient data for order.' },
         { status: 400 }
       );
     }
@@ -36,9 +43,9 @@ export async function POST(req) {
     if (!user) {
       user = await User.create({
         email: customer.email,
-        firstName: customer.name?.split(" ")[0] || "",
-        lastName: customer.name?.split(" ")[1] || "",
-        phoneNumber: customer.phone || "",
+        firstName: customer.firstName || customer.name?.split(" ")[0],
+        lastName: customer.lastname ||customer.name?.split(" ")[1] || "",
+        phoneNumber: customer.phoneNumber || "",
         role: "customer",
       });
     } else {
@@ -51,7 +58,7 @@ export async function POST(req) {
     // ============== 3️⃣ CREATE ORDER ==============
     const newOrder = await Order.create({
       userId: user._id,
-      totalamount,
+      totalcost,
       customer,
       deliveryDate,
       extras,

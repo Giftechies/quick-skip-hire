@@ -1,5 +1,9 @@
+import Innerbanner from "@/components/sharedUi/Innerbanner"
 export default function profilePage() {
     return(
-        <div>kd</div>
+      <>
+      <Innerbanner pagename={'Profile'} />
+      
+      </>
     )
 }
