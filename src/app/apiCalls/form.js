@@ -223,10 +223,36 @@ export async function DeleteTimeSlot(id) {
 }
 
 
-export async function checkout (){
+export async function createCheckoutSession(data){
     try {
+        const res = await fetch('/api/checkout/session', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            return {
+                success:false,
+                message: result.message || 'Failed to create Stripe session'
+            }
+        }
+        return {
+            success:true,
+            url: result.url,
+            sessionId: result.sessionId
+        };
+
         
     } catch (error) {
+        return {
+            success:false,
+            message: error.message || 'Failed to create Stripe session'
+        }
         
     }
 }

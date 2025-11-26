@@ -36,7 +36,7 @@ export default function Cart() {
   const total = subtotal + vat;
 
 useEffect(() => {
-  setValue("totalcost", total); // 🔥 sync total → form
+  setValue("totalamount", total); // 🔥 sync total → form
 }, [total, setValue]);
 
   return (

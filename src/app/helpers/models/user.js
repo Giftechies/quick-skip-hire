@@ -36,6 +36,7 @@ const UserSchema = new mongoose.Schema({
   orders: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order',
+    default:[]
   }],
    role: {
     type: String,

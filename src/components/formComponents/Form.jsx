@@ -8,8 +8,9 @@ import PostDetails from "./PostDetails";
 import Skip from "./Skip";
 import ProgressBar from "./ProgressBar";
 import { useRouter } from "next/navigation";
-import { Fetchjobtype, Fetchextra,FetchTimeSlots } from "@/app/apiCalls/form";
+import { Fetchjobtype, Fetchextra,FetchTimeSlots, createCheckoutSession } from "@/app/apiCalls/form";
 import UserInfo from "./UserInfo";
+import toast from "react-hot-toast";
 
 const BoonkingOnline = () => {
   // 🟢 Default form values
@@ -22,7 +23,7 @@ const BoonkingOnline = () => {
     jobType: "",
     skipSize: {},
     extras: {},
-    totalcost: null,
+    totalamount: null,
     customer: {
       lastName: "",
       firstName: "",
@@ -92,12 +93,24 @@ const BoonkingOnline = () => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("Form Data Submitted: ", data);
-   if(currentStep === steps.length -1){
+   if(currentStep === steps.length-1){
     console.log("Final form data submitted: ", data);
+
+  const result = await createCheckoutSession(data);
+  console.log("session result>>>>>",result);
+  
+
+  if (result.success) {
+    window.location.href = result.url;
+  } else {
+    toast.error("Payment session error :" + result.message);
+  }
+
+
    }
-  };
+};
   return (
     <>
       <FormProvider {...methods}>

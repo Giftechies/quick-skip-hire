@@ -11,7 +11,7 @@ const OrderSchema = new mongoose.Schema(
     },
 
     // FRONTEND PAYLOAD FIELDS
-    totalcost: Number,     // Note: frontend sends "totalamount", not "totalAmount"
+    totalamount: Number,     // Note: frontend sends "totalamount", not "totalAmount"
     customer: {
       name: String,
       phone: String,
@@ -37,11 +37,18 @@ const OrderSchema = new mongoose.Schema(
     },
     timeSlot: String,
 
-    status: {
+    orderStatus: {
       type: String,
-      enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
       default: "Pending",
     },
+ paymentStatus: {
+  type: String,
+  enum: ['pending','paid','failed'],
+  default: 'pending',
+},
+stripeSessionId: { type: String },
+stripePaymentIntentId: { type: String },
   },
   { timestamps: true }
 );
