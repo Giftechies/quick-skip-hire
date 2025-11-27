@@ -5,14 +5,15 @@ import { ConnectDb } from "@/app/helpers/DB/db";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-export async function GET(req,{params}){
+export async function GET(req,){
     await ConnectDb();
     try {
-        const param = await params
-        const sessionId = param.session_id
+        // const param = await params
+         const { searchParams } = new URL(req.url);
+    const sessionId = searchParams.get("session_id");
 
         if(!sessionId){
-            return NextResponse({
+            return NextResponse.json({
                 success:false,
                 message:'session id not found'
             })
@@ -21,7 +22,9 @@ export async function GET(req,{params}){
         const session = await stripe.checkout.sessions.retrieve(sessionId)
         const orderid = session.metadata.orderId
 
-        const order = await Order.findById(orderid);
+        const order = await Order.findByIdAndUpdate(orderid,{
+            paymentStatus:'paid',
+        });
 
         if(!order){
             return NextResponse.json({
@@ -29,6 +32,9 @@ export async function GET(req,{params}){
                 message:'order not found'
             },{status:400})
         }
+
+        console.log(order.paymentStatus);
+        
 
         if(order.paymentStatus !=='paid'){
             return NextResponse.json({
@@ -38,8 +44,8 @@ export async function GET(req,{params}){
 
         }
 
-        return NextResponse({
-            success:ture,
+        return NextResponse.json({
+            success:true,
             message:"order found and payment paid",
             order:order,
             paymentStatus:'paid'

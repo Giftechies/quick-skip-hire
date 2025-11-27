@@ -24,7 +24,7 @@ export async function POST(request) {
       postcodeArea,
       skipSize,timeSlot
     } = body;
-
+    
     if (!customer?.email || !customer.firstName) {
       return NextResponse.json({ success: false, message: 'User info missing' }, { status: 400 });
     }
@@ -106,6 +106,6 @@ export async function POST(request) {
     return NextResponse.json({ success: true, url: session.url, sessionId: session.id });
   } catch (err) {
     console.error('Create checkout session error', err);
-    return NextResponse.json({ success: false, message: `${err.message} fdg` }, { status: 500 });
+    return NextResponse.json({ success: false, message: `${err.message}` }, { status: 500 });
   }
 }
