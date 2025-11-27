@@ -58,7 +58,7 @@ export async function POST(req) {
     // ============== 3️⃣ CREATE ORDER ==============
     const newOrder = await Order.create({
       userId: user._id,
-      totalcost,
+      totalamount,
       customer,
       deliveryDate,
       extras,

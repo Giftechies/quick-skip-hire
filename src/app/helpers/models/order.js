@@ -33,7 +33,6 @@ const OrderSchema = new mongoose.Schema(
     skipSize: {
       rate: Number,
       size: String,
-      timeslot: String,
     },
     timeSlot: String,
 

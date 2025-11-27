@@ -1,13 +1,10 @@
 import Stripe from "stripe";
 import { ConnectDb } from "@/app/helpers/DB/db";
 import Order from "@/app/helpers/models/order";
-import { NextResponse } from "next/server";
 
-export const config = {
-  api: {
-    bodyParser: false, // ❗ IMPORTANT for Stripe webhooks
-  },
-};
+//  Force Node runtime (required for raw body)
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -15,40 +12,42 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 export async function POST(request) {
   const sig = request.headers.get("stripe-signature");
+
+  // Read raw body exactly as Stripe sends it
   const rawBody = await request.text();
 
   let event;
-
+  
+  
   try {
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-  } catch (err) {
-    return new Response(`Webhook signature verification failed: ${err.message}`, {
+  } catch (error) {
+    return new Response(`Webhook signature failed: ${error.message}`, {
       status: 400,
     });
   }
+  console.log('webhook is runing',event);
 
-  // 🎯 Handle the event type
+  // Handle event types
   if (event.type === "checkout.session.completed") {
     try {
       await ConnectDb();
 
       const session = event.data.object;
-
       const orderId = session.metadata.orderId;
 
       await Order.findByIdAndUpdate(orderId, {
-        paymentStatus:"paid",
+        paymentStatus: "paid",
         stripePaymentIntentId: session.payment_intent,
       });
 
-      console.log("Order marked as paid:", orderId);
-
-    } catch (err) {
-      console.error("DB Error: ", err);
+      console.log("Order updated successfully:", orderId);
+    } catch (error) {
+      console.error("Database error:", error);
       return new Response("Database error", { status: 500 });
     }
   }

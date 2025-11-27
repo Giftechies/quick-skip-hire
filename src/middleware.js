@@ -13,7 +13,7 @@ export async function middleware(req){
   const url = req.nextUrl.clone();
   
   let token = req.cookies.get("auth_token")?.value;
-  console.log("midk>>",token);
+  // console.log("midk>>",token);
   
   if(!token){
     token = req.headers.get('Authorization')?.startsWith('Bearer ') ? req.headers.get('Authorization').split(' ')[1] : null;
