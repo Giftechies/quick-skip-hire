@@ -13,7 +13,7 @@ export async function middleware(req){
   const url = req.nextUrl.clone();
   
   let token = req.cookies.get("auth_token")?.value;
-  // console.log("midk>>",token);
+  console.log("midk>>",token);
   
   if(!token){
     token = req.headers.get('Authorization')?.startsWith('Bearer ') ? req.headers.get('Authorization').split(' ')[1] : null;
@@ -33,6 +33,7 @@ export async function middleware(req){
 
 const {payload} = await jwtVerify(token,secret);
 const userRole = payload?.role?.toLowerCase().trim( );
+
 
 if(userRole !== 'admin'){
   if(admin_only_paths.includes(req.nextUrl.pathname)){
