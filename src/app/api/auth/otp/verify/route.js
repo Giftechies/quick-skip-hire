@@ -69,8 +69,9 @@ export async function POST(request) {
       userId: user._id,
       role: user.role,
       email: user.email,
-      phoneNumber: user.phoneNumber,
-      name: `${user.firstName} ${user.lastName}`
+      phoneNumber:user.phoneNumber,
+      firstName:user.firstName,
+      lastName:user.lastName
     }, process.env.JWT_SECRET, {
       expiresIn: `${TOKEN_LIFE_DAYS}d`
     })
@@ -89,7 +90,8 @@ export async function POST(request) {
         message: "Login successful",
         user:{
          userId: user._id,
-          name:`${user.firstName} ${user.lastName}`,
+          firstName:`${user.firstName} `,
+          lastName:`${user.lastName} `,
           email: user.email,
           phone: user.phoneNumber,
           role: user.role,

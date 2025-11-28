@@ -5,14 +5,11 @@ import { getuserDetails } from "@/lib/auth";
 
 
 export default async function profilePage() {
-    const user =await getuserDetails();
-    console.log(user<"dddd>");
+    const user =  await getuserDetails();
     return(
       <>
       <Innerbanner pagename={'Profile'} />
-      <ProfileComponent/>
-      
-      
+      <ProfileComponent id={user.userId}/>
       </>
     )
 }

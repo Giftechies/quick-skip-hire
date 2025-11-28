@@ -256,3 +256,69 @@ export async function createCheckoutSession(data){
         
     }
 }
+
+export async function ProfileUpdate(id,formData){
+  
+    try {
+
+        const res = await fetch(`/api/user/${id}`,{
+            method:"PUT",
+            body: JSON.stringify(formData) ,
+            headers:{
+                'Content-Type':"applicaton/json"
+            }
+        })
+        const data = await res.json()
+        if(!res.ok){
+            return{
+                success:false,
+                message:data.message
+            }
+        }
+
+        return{
+            success:true,
+            message:data.message,
+            data:data
+        }
+    } catch (error) {
+        return{
+            success:false,
+            message:error.message || "update failed!!"
+        }
+        
+    }
+}
+
+export async function ProfileFetch({id}){
+  
+    try {
+        console.log("calling",id);
+        
+
+        const res = await fetch(`/api/user/${id}`,{
+            method:"GET",
+        })
+        const data = await res.json()
+        if(!res.ok){
+            return{
+                success:false,
+                message:data.message
+            }
+        }
+
+        console.log(data,"ddf>>>");
+        
+        return{
+            success:true,
+            message:data.message,
+            data:data.user
+        }
+    } catch (error) {
+        return{
+            success:false,
+            message:error.message || "update failed!!"
+        }
+        
+    }
+}
