@@ -292,10 +292,7 @@ export async function ProfileUpdate(id,formData){
 
 export async function ProfileFetch({id}){
   
-    try {
-        console.log("calling",id);
-        
-
+    try {    
         const res = await fetch(`/api/user/${id}`,{
             method:"GET",
         })
@@ -306,9 +303,6 @@ export async function ProfileFetch({id}){
                 message:data.message
             }
         }
-
-        console.log(data,"ddf>>>");
-        
         return{
             success:true,
             message:data.message,
@@ -321,4 +315,49 @@ export async function ProfileFetch({id}){
         }
         
     }
+}
+
+export async function fetchOrder(id){
+    try {
+        const res = await fetch(`/api/orders/${id}`)
+        const data =await res.json();
+        if(!res.ok){
+            return{
+                success:false,
+                message:'order not fetch.Please try again!'
+            }
+        };
+console.log(data,'order get');
+
+        return {
+                success:true,
+                message:'order fetch successfully!',
+                data:data.orders
+            }
+        
+    } catch (error) {
+          return{
+            success:false,
+            message:error.message || "something went worng!!"
+        }
+    }
+}
+
+export async function logout() {
+    try {
+        const res = await fetch('api/auth/logout',{
+            method:"POST"
+        })
+        return {
+            success:true,
+            message:'logout successfully!'
+        }
+        
+    } catch (error) {
+           return{
+            success:false,
+            message:error.message || "something went worng!!"
+        }
+    }
+    
 }

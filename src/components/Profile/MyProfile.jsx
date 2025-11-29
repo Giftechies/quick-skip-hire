@@ -1,62 +1,10 @@
-
-// "use client"
-
-// import { use, useEffect, useState } from "react"
-// import { Button } from "../ui/button"
-
- 
-
-
-// export default function MyProfile({user}){
-//     const defaultvalue= {
-//         firstName:'',
-//         lastName:"",
-//         email:"",
-//         phoneNumber:"",
-//     }
-//     const [formData,setformData] = useState(defaultvalue)
-
-// useEffect(()=>{
-//     formData.firstName=user.firstName || ""
-//     formData.lastName = user.lastName || ''
-//     formData.email = user.email || ''
-//     formData.phoneNumber = user.phoneNumber || ''
-// },[])
-    
-//     const formHandler = (data)=>{
-//         data.preventDefault()
-//         console.log("ddd",formData);   
-//     }
-     
-//     return(
-//         <form  onSubmit={formHandler}  className="flex gap-4 flex-col" >
-//           <div className=" flex  gap-6 " >
-//               <Inputfeild type="text" name={formData.firstName} label="First Name" placeholder={'enter your first name'} setvalue={setformData}  />
-//               <Inputfeild type="text" name={formData.lastName} label="Last Name" placeholder={'enter your last name'} setvalue={setformData}  />
-//           </div>
-//           <div className="flex gap-6" >
-//               <Inputfeild type="text" name={formData.email} label="Email" placeholder={'enter your email'}  setvalue={setformData} />
-//               <Inputfeild type="tel" name={formData.phoneNumber} label="Phone Number" placeholder={'enter your phone number'}  setvalue={setformData} />
-
-//           </div> 
-
-//           <Button type='submit' className={'w-fit'} >Update</Button>
-
-//         </form>
-//     )
-// }
-
-// const Inputfeild = ({type='text',name,label="",placeholder ,setvalue})=> <div className="w-full flex flex-col gap-2" >
-//     <label htmlFor={name}>{label}</label>
-//     <input onChange={(e)=>setvalue(e.target.value)} type={type} name={name} value={name} className=" p-2 border border-black rounded-md placeholder:text-black/80 text-black " />
-// </div>
 "use client";
-
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { ProfileUpdate } from "@/app/apiCalls/form";
+import toast from "react-hot-toast";
 
-export default function MyProfile({ user,id }) {
+export default function MyProfile({ user,getUserDetail }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -78,12 +26,18 @@ export default function MyProfile({ user,id }) {
   const formHandler = async (e) => {
     e.preventDefault();
     console.log("Updated Data:", formData);
+    const id = user?._id
     const res = await ProfileUpdate(id,formData)
-
     console.log(res);
+    if(!res.success){
+      toast.error(`${res.message}`||'Something went worng!')
+    }
+    toast.success('Profile update successfully!')
+    getUserDetail()
     
 
   };
+
 
   return (
     <form onSubmit={formHandler} className="flex gap-4 flex-col">
@@ -161,3 +115,57 @@ const InputField = ({ type, name, label, placeholder, value, setValue }) => {
     </div>
   );
 };
+
+
+
+// "use client"
+
+// import { use, useEffect, useState } from "react"
+// import { Button } from "../ui/button"
+
+ 
+
+
+// export default function MyProfile({user}){
+//     const defaultvalue= {
+//         firstName:'',
+//         lastName:"",
+//         email:"",
+//         phoneNumber:"",
+//     }
+//     const [formData,setformData] = useState(defaultvalue)
+
+// useEffect(()=>{
+//     formData.firstName=user.firstName || ""
+//     formData.lastName = user.lastName || ''
+//     formData.email = user.email || ''
+//     formData.phoneNumber = user.phoneNumber || ''
+// },[])
+    
+//     const formHandler = (data)=>{
+//         data.preventDefault()
+//         console.log("ddd",formData);   
+//     }
+     
+//     return(
+//         <form  onSubmit={formHandler}  className="flex gap-4 flex-col" >
+//           <div className=" flex  gap-6 " >
+//               <Inputfeild type="text" name={formData.firstName} label="First Name" placeholder={'enter your first name'} setvalue={setformData}  />
+//               <Inputfeild type="text" name={formData.lastName} label="Last Name" placeholder={'enter your last name'} setvalue={setformData}  />
+//           </div>
+//           <div className="flex gap-6" >
+//               <Inputfeild type="text" name={formData.email} label="Email" placeholder={'enter your email'}  setvalue={setformData} />
+//               <Inputfeild type="tel" name={formData.phoneNumber} label="Phone Number" placeholder={'enter your phone number'}  setvalue={setformData} />
+
+//           </div> 
+
+//           <Button type='submit' className={'w-fit'} >Update</Button>
+
+//         </form>
+//     )
+// }
+
+// const Inputfeild = ({type='text',name,label="",placeholder ,setvalue})=> <div className="w-full flex flex-col gap-2" >
+//     <label htmlFor={name}>{label}</label>
+//     <input onChange={(e)=>setvalue(e.target.value)} type={type} name={name} value={name} className=" p-2 border border-black rounded-md placeholder:text-black/80 text-black " />
+// </div>

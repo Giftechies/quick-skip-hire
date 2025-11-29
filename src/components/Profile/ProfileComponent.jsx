@@ -5,37 +5,34 @@ import Orders from "./Orders"
 import MyProfile from "./MyProfile"
 import { ProfileFetch } from "@/app/apiCalls/form"
 
-export default  function ProfileComponent({id}){
-  
-    const [currentStep,setCurrentStep] = useState(0)
-    const [user,setuser] = useState()
+export default function ProfileComponent({ id }) {
+
+    const getUserDetail = async () => {
+        const user = await ProfileFetch({ id })
+        setuser(user.data)
+    }
+    const [currentStep, setCurrentStep] = useState(0)
+    const [user, setuser] = useState()
     const components = [
-       {label:"My Profile",component: <MyProfile id={id} user={user} />},
-       { label:"Orders",component:<Orders/>},
-        
+        { label: "My Profile", component: <MyProfile  user={user} getUserDetail={getUserDetail}  /> },
+        { label: "Orders", component: <Orders id={id} /> },
     ]
 
-    useEffect(()=>{
-     async function get(){
-            const user = await ProfileFetch({id})
-            console.log(user);
-            setuser(user)
-            
-     }
-     get()
 
-    },[])
-    // console.log(user,"user");
-    return(
-       <section className="container p-0!   my-8" >
-        <main className="flex gap-8 relative  " >
-            <ProfileSideBar  user={user} components={components} currentStep={currentStep} SetcurrentStep={setCurrentStep}  />
-            <div className=" border-4 h-300 w-full p-6 " >
-                {components[currentStep].component}
-            </div>
-        </main>
+    useEffect(() => {
+        getUserDetail();
+    }, [])
+
+    return (
+        <section className="container p-0!   my-8" >
+            <main className="flex gap-8 relative  " >
+                <ProfileSideBar user={user} components={components} currentStep={currentStep} SetcurrentStep={setCurrentStep} />
+                <div className="  h-250 w-full p-6 " >
+                    {components[currentStep].component}
+                </div>
+            </main>
 
 
-       </section>
+        </section>
     )
 }
