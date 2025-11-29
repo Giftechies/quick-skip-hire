@@ -1,4 +1,5 @@
  export const menu = [
+      { label: "Orders", path: "/quick-skip/admin/orders" },
       { label: "Postcode", path: "/quick-skip/admin/postcode" },
         { label: "Category", path: "/quick-skip/admin/category" },
         { label: "Size", path: "/quick-skip/admin/size" },

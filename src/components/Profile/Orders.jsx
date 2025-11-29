@@ -60,7 +60,7 @@ export default function Orders({ id }) {
   // Helper component for styled data rows
   const DataRow = ({ icon: Icon, label, value }) => (
     <div className="flex items-center space-x-2 text-gray-700">
-      <Icon className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+      <Icon className="w-4 h-4 text-indigo-500 " />
       <p>
         <span className="font-semibold">{label}:</span> {value}
       </p>
@@ -123,8 +123,14 @@ export default function Orders({ id }) {
               </div>
             )}
           </div>
+        <div className="flex justify-end p-2 " >
+          <div className="p-2 border" >
+            Total Amount:  <strong>{formatCurrency(order.totalamount)}</strong>
+          </div>
+        </div>
         </div>
       ))}
+    
     </section>
   );
 }

@@ -90,13 +90,13 @@ export default function Sidebar({ className }) {
   return (
     <section
       className={cn(
-        "shrink-0 min-h-screen bg-black text-white p-6",
+        "shrink-0 h-screen bg-black text-white p-6 ",
         className
       )}
     >
       <h3
         onClick={() => navigate.push("/admin")}
-        className="h4 cursor-pointer font-semibold flex gap-2"
+        className="h4 items-center cursor-pointer font-semibold flex gap-2"
       >
         <ChartArea /> Admin Panel
       </h3>

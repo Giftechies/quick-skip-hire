@@ -26,14 +26,14 @@ export async function POST(request) {
     } = body;
     
     if (!customer?.email || !customer.firstName) {
-      return NextResponse.json({ success: false, message: 'User info missing' }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'User info missing' }, { status:400 });
     }
 
     if(!totalamount || !deliveryDate || !fullPostcode || !jobType || !permitOnHighway || !postcodeArea || !skipSize){
         return NextResponse.json({
             success:false,
             message:'Insuficient data provided!!'
-        });
+        },{status:500});
     };
 
     let user = await User.findOne({email:customer.email});
@@ -56,7 +56,7 @@ export async function POST(request) {
     // Option A: Create order in DB with status pending and get its id
     const order = await Order.create({
       userId: user._id, // you can link if user exists
-      totalAmount: totalamount,
+      totalamount: totalamount,
       customer,
       deliveryDate:deliveryDate,
       extras:extras,
@@ -65,7 +65,7 @@ export async function POST(request) {
       permitOnHighway:permitOnHighway,
       skipSize:skipSize,
       timeSlot:timeSlot,
-      orderStatus:'pending',
+      orderStatus:'processing',
       paymentStatus: 'pending',
       stripeSessionId:'',
       stripePaymentIntentId:'',

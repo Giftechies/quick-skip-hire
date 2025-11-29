@@ -18,37 +18,35 @@ import { useRouter } from "next/navigation";
 export default function RootLayout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useRouter();
-  const Openhandling = ()=>{
+  const Openhandling = () => {
     setIsMenuOpen(!isMenuOpen)
-    console.log("clicking");
-    
   }
   return (
     <div className="flex min-h-screen">
       {/* Sidebar (fixed/sticky) */}
-      <Sidebar className="fixed left-0 top-0 z-50  hidden  h-screen  w-80 shadow-lg lg:block " />
+      <Sidebar className="fixed left-0 top-0 z-50  hidden  overflow-y-auto  w-80 shadow-lg lg:block " />
 
       {/* Main Content Area */}
       <div className=" flex flex-1 flex-col lg:ml-80  ">
         {/* Header */}
-        <header className="bg-white sticky right-0 top-0 z-50 flex  h-16 w-full items-center justify-between bg-white  px-8 shadow-md lg:justify-end ">
+        <header className=" sticky right-0 top-0 z-50 flex  h-16 w-full items-center justify-between bg-white  px-8 shadow-md lg:justify-end ">
 
-             <Button variant="outline" onClick={Openhandling} className="lg:hidden">
-                <MenuIcon   />
-              </Button>
+          <Button variant="outline" onClick={Openhandling} className="lg:hidden">
+            <MenuIcon />
+          </Button>
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}  >
             <SheetTrigger>
-           
+
             </SheetTrigger>
-            <SheetContent side="left" className=" bg-black text-white ">
+            <SheetContent side="left" className=" bg-black text-white overflow-y-auto ">
               <SheetHeader>
                 <SheetTitle>
                   {" "}
                   <h3
                     onClick={() => navigate.push("/admin")}
-                    className="h4 flex cursor-pointer gap-2 font-semibold text-white"
+                    className="h4 flex items-center justify-center cursor-pointer gap-2 font-semibold text-white"
                   >
-                    <ChartArea /> Admin Panel
+                    <ChartArea className="" /> Admin Panel
                   </h3>
                 </SheetTitle>
               </SheetHeader>
@@ -100,7 +98,7 @@ export default function RootLayout({ children }) {
         </header>
 
         {/* Page Content */}
-        <main className="w-full flex-1  ">{children}</main>
+        <main className="w-full flex-1 overflow-y-auto  ">{children}</main>
       </div>
     </div>
   );

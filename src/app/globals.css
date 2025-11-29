@@ -38,6 +38,27 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        /* Scrollbar width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Scrollbar background */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Scrollbar draggable thumb */
+::-webkit-scrollbar-thumb {
+  background: #434446; /* gray-400 */
+  border-radius: 1000px;
+}
+
+/* On hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #525253; /* gray-500 */
+}
+
 
 @theme inline {
   --color-background: var(--background);
