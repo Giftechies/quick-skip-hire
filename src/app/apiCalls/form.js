@@ -361,3 +361,32 @@ export async function logout() {
     }
     
 }
+
+export async function OrderAdmin(status){
+    try {
+        const res = await fetch(`api/orders?status=${status},{
+            method:"GET",
+            cache:'no-store'
+            }`).then(r =>r.json())
+
+        if(!res.success){
+            return {
+                success:false,
+                message:'fetching order failed.Please try again!'
+            }
+        };
+
+        return {
+            success:true,
+            message:"order fetch successfully!",
+            order:res
+        }
+        
+    } catch (error) {
+        return {
+            success:false,
+            message:error.message || 'something went worng!'
+        }
+        
+    }
+}
