@@ -15,7 +15,7 @@ export async function GET(req){
         const order = await Order.find(filter);
 
         return NextResponse.json({
-            success:false,
+            success:true,
             message:'Orders found successfull!!',
             data:order
         })

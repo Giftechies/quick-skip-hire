@@ -1,5 +1,5 @@
 
-
+const base_url= process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
 
 export async function RequestOtp (email){
     try {
@@ -345,7 +345,7 @@ console.log(data,'order get');
 
 export async function logout() {
     try {
-        const res = await fetch('api/auth/logout',{
+        const res = await fetch('/api/auth/logout',{
             method:"POST"
         })
         return {
@@ -361,32 +361,65 @@ export async function logout() {
     }
     
 }
-
-export async function OrderAdmin(status){
-    try {
-        const res = await fetch(`api/orders?status=${status},{
-            method:"GET",
-            cache:'no-store'
-            }`).then(r =>r.json())
-
-        if(!res.success){
-            return {
-                success:false,
-                message:'fetching order failed.Please try again!'
-            }
-        };
-
-        return {
-            success:true,
-            message:"order fetch successfully!",
-            order:res
+export async function OrderAdmin(status) {
+    try { 
+        let query= {}
+        if (status) {
+           
+            query = new URLSearchParams({ status }).toString();
         }
-        
+
+
+        const res = await fetch(`${base_url}/api/orders?${query}`, {
+            method: "GET",
+            cache: "no-store",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!res.ok) {
+            return {
+                success: false,
+                message: "Fetching orders failed. Please try again!"
+            };
+        }
+
+        const data = await res.json();
+
+        return data
+    
+
     } catch (error) {
         return {
-            success:false,
-            message:error.message || 'something went worng!'
+            success: false,
+            message: error.message || "Something went wrong!"
+        };
+    }
+}
+
+export async function fetchSingleOrder(id){
+    try {
+        const res = await fetch(`${base_url}/api/orders/order-id/${id}`,{
+            method:'GET',
+            cache:'no-store'
+        })
+        const data = await res.json()
+        if(!res.ok){
+            return{
+                success:false,
+                message:'something went worng'
+            }
         }
-        
+        return{
+            success:true,
+            message:'order fetch successfully',
+            data:data.data
+        }
+    } catch (error) {
+         return {
+            success: false,
+            message: error.message || "Something went wrong!"
+        };
     }
 }
