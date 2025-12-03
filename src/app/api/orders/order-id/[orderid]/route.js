@@ -38,7 +38,7 @@ export  async function GET(req,{params}){
     }
 }
 
-export async function POST(req,{params}){
+export async function PUT(req,{params}){
     try {
         await ConnectDb();
 
@@ -49,7 +49,7 @@ export async function POST(req,{params}){
                 message:'order id required'
             }
         };
-        const {status} = req.json()
+        const {status} = await req.json()
 
         const order = await Order.findByIdAndUpdate(orderid,{
             adminOrderStatus:status
@@ -62,7 +62,7 @@ export async function POST(req,{params}){
             })
         };
 
-        return NextResponse({
+        return NextResponse.json({
             success:true,
             message:'Order update successfully',
             data:order

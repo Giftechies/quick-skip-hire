@@ -2,7 +2,6 @@
 // api/auth/otp/verify/route.js
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-// import crypto from "crypto";
 import { serialize } from "cookie";
 import jwt from "jsonwebtoken"
 

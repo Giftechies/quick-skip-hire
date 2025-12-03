@@ -398,6 +398,43 @@ export async function OrderAdmin(status) {
     }
 }
 
+// admin order update
+export async function  updateOrderStatus(id,status){
+    try {
+
+        const res = await fetch(`/api/orders/order-id/${id}`,{
+            method:"PUT",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({status})
+        })
+        const data = await res.json()
+        if(!res.ok){
+            return {
+                success:false,
+                message:'update failed. Please try again!'
+            }
+        };
+
+        return{
+            success:true,
+            message:'Update successfully!',
+            data
+        }
+        
+    } catch (error) {
+        return{
+            success:false,
+            message:error.message || 'Update failed'
+        }
+        
+    }
+}
+
+
+
+
+// Server api
+
 export async function fetchSingleOrder(id){
     try {
         const res = await fetch(`${base_url}/api/orders/order-id/${id}`,{

@@ -110,7 +110,7 @@ return (
                     control: (provided, state) => ({
                       ...provided,
                       borderRadius: ".5rem",
-                      borderColor: state.isFocused ? "#F39740" : "#ccc",
+              
                       boxShadow: state.isFocused
                         ? "0 0 0 1px #ED7527"
                         : "none",

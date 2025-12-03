@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import { Fetchjobtype, Fetchextra,FetchTimeSlots, createCheckoutSession } from "@/app/apiCalls/form";
 import UserInfo from "./UserInfo";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import { Button } from "../ui/button";
+import { UserCircleIcon } from "lucide-react";
 
 const BoonkingOnline = () => {
   // 🟢 Default form values
@@ -33,6 +36,7 @@ const BoonkingOnline = () => {
   };
 
   // let fetchextra =[]
+  const route = useRouter()
   const [fetchjob, setfetchjob] = useState([]);
   const [fetchextra, setfetchextra] = useState([]);
   const [fetchedTimeSlots, setFetchedTimeSlots] = useState([]);
@@ -111,13 +115,25 @@ const BoonkingOnline = () => {
 
    }
 };
+
+
   return (
-    <>
+    <div className="relative py-20 min-h-screen  " >
+        <Image src={'/bgPic.webp'} width={250} height={250} alt="banner-pic" className="w-full h-full inset-0 absolute -z-20 object-center object-cover " />
+        <div className="bg-[#0b1d54]/80 w-full absolute inset-0 -z-10" />
+
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="container  z-30  py-8   flex flex-col items-center gap-8 rounded-lg bg-white  shadow-md"
+          className="container  z-30  py-8    flex flex-col items-center gap-8 rounded-lg  bg-white  shadow-md"
         >
+               <div className=" z-30  top-3 container  mx-auto  bg-whit  flex justify-between items-center " >
+                            <Image src={'/logo.png'} width={150}  height={10} className="h-24" alt="brand-logo" />
+            
+                          <Button onClick={()=>route.push("/profile")} className={'w-fit h-full cursor-pointer '} >
+                              <UserCircleIcon className={'w-8 h-8 size-8 '} />
+                          </Button>
+                            </div>  
           <h1 className="h2 title-animation text-center  font-oswald     ">
             Your Skip, Ready to Hire
           </h1>
@@ -157,7 +173,7 @@ const BoonkingOnline = () => {
             ) : (
               <button
                 type="submit"
-                className=" rounded-full bg-green-600 px-4 py-2 text-white"
+                className=" rounded-full bg-primary-blue px-4 py-2 text-white"
               >
                 Submit
               </button>
@@ -165,7 +181,9 @@ const BoonkingOnline = () => {
           </div>
         </form>
       </FormProvider>
-    </>
+    </div>
+
+ 
   );
 };
 

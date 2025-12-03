@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
+
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ChartArea, MenuIcon } from "lucide-react";
+import {  ChartLine, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { MenuItem } from "@/components/ui/Menuitem";
@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
                     onClick={() => navigate.push("/admin")}
                     className="h4 flex items-center justify-center cursor-pointer gap-2 font-semibold text-white"
                   >
-                    <ChartArea className="" /> Admin Panel
+                    <ChartLine  className="" /> Admin Panel
                   </h3>
                 </SheetTitle>
               </SheetHeader>

@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { ChartArea, ChevronDown, ChevronRight } from "lucide-react"
+import { ChartArea, ChevronDown, ChevronRight,Basket,MapPin,ClipboardList,Ruler,Clock3,Settings,Truck,CirclePlus,CirclePoundSterling, ChartLine, } from "lucide-react"
 import { useRouter, usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import {menu} from "@/data/adminMenu" 
@@ -16,6 +16,7 @@ export default function Sidebar({ className }) {
   // keep parent open if any child is active
   useEffect(() => {
     menu?.forEach((el, id) => {
+     
       if (el.children?.some((child) => pathname === child.path)) {
         setOpenMenu(id) // auto-open parent
       }
@@ -34,6 +35,7 @@ export default function Sidebar({ className }) {
 
           const isActive = pathname === el.path || isChildActive
           const isOpen = openMenu === id
+           const Icon = el.icon
 
           return (
             <div key={id} className="flex flex-col">
@@ -47,11 +49,11 @@ export default function Sidebar({ className }) {
                   }
                 }}
                 className={cn(
-                  "rounded-xl font-light w-full p-3 flex justify-between items-center cursor-pointer hover:text-black-1 hover:bg-white-2",
-                  { "bg-white text-black font-medium": isActive }
+                  "rounded-xl font-light w-full p-3 flex gap-4 items-center cursor-pointer hover:text-black-1 hover:bg-white-2 hover:bg-blue-600 hover:text-white ",
+                  { "bg-white text-black font-medium hover:bg-white/95 hover:text-black/80 ": isActive }
                 )}
               >
-                <span>{el.label}</span>
+                 <Icon absoluteStrokeWidth={true}  strokeWidth={1.5} /> <span>{el.label}</span>
                 {hasChildren &&
                   (isOpen ? (
                     <ChevronDown size={16} />
@@ -98,7 +100,7 @@ export default function Sidebar({ className }) {
         onClick={() => navigate.push("/admin")}
         className="h4 items-center cursor-pointer font-semibold flex gap-2"
       >
-        <ChartArea /> Admin Panel
+        <ChartLine  /> Admin Panel
       </h3>
 
       <div className="flex">

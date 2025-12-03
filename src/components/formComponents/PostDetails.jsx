@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form"; // Added Controller for better Select handling
 import { Skeleton } from "@/components/ui/skeleton";
 import { Phone } from "lucide-react";
@@ -20,10 +20,15 @@ export default function PostDetails({ jobtype = [], slots = [] }) {
     control, // Destructure control for easier Select management
     formState: { errors },
   } = useFormContext();
+const [selectedPermit,setselectedPermit] = useState(watch("permitOnHighway") || '')
+const [selectedPostcode,setselectedPostcode] = useState(watch("postcodeArea") || "")
 
-  const selectedPermit = watch("permitOnHighway");
-  const selectedPostcode = watch("postcodeArea");
+useEffect(()=>{
+ setselectedPermit(watch('permitOnHighway'));
+ setselectedPostcode(watch('postcodeArea'))
+ console.log(selectedPermit,'selectedPermit');
 
+},[selectedPermit,selectedPostcode])
   const [loading, setLoading] = useState(false);
 
   // Default fallback options if jobtype prop is empty

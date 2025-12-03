@@ -43,7 +43,7 @@ const OrderSchema = new mongoose.Schema(
     },
     adminOrderStatus:{
       type:String,
-      enum:['new',"pending","delivered"],
+      enum:['new',"processing","complete"],
       default :'new'
     },
  paymentStatus: {

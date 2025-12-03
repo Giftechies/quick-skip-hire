@@ -15,7 +15,9 @@ import {
   FaCreditCard,
   FaRegCheckCircle,
 } from "react-icons/fa";
-import { Mail } from "lucide-react";
+import { ArrowLeftIcon, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 /* ----------------- UTILITIES ------------------- */
 
@@ -97,12 +99,14 @@ export default function AdminOrderPreview({ orderData }) {
   } = data;
 
   const safeExtras = extras ? Object.entries(extras) : [];
+  const route = useRouter()
 
   return (
     <div className="min-h-screen p-6 md:p-10 bg-gray-50 space-y-10">
       {/* HEADER */}
-      <header>
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+      <header className="flex justify-between" >
+      <div>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
           <FaRegCheckCircle className="w-7 h-7 text-indigo-600 mr-3" />
           Order #{_id?.slice(-8)}
         </h1>
@@ -111,6 +115,8 @@ export default function AdminOrderPreview({ orderData }) {
         <p className="text-sm text-gray-500 mt-1">
           Placed on {safeFormatDate(createdAt, "dd MMM yyyy, hh:mm a")}
         </p>
+      </div>
+      <Button onClick={()=>route.push("/quick-skip/admin/orders/")} ><ArrowLeftIcon/> Back</Button>
       </header>
 
       {/* GRID LAYOUT */}
