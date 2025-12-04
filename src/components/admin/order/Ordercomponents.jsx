@@ -9,7 +9,7 @@ import OrderEdit from "./OrderEdit";
 
 export default function Ordercomponent({ orderData }) {
     const [status, setStatus] = useState("");          // filter status
-    const [orders, setOrders] = useState([]);          // all orders from API
+    const [orders, setOrders] = useState(orderData.data || []);          // all orders from API
     const route = useRouter()
 
     useEffect(() => {

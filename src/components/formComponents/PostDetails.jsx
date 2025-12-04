@@ -154,6 +154,7 @@ useEffect(()=>{
               <input
                 type="radio"
                 value="Yes"
+                 onClick={()=>setselectedPermit("YEs")}
                 {...register("permitOnHighway", {
                   required: "Please select an option",
                 })}
@@ -171,6 +172,7 @@ useEffect(()=>{
             >
               <input
                 type="radio"
+                onClick={()=>setselectedPermit("No")}
                 value="No"
                 {...register("permitOnHighway", {
                   required: "Please select an option",
