@@ -10,11 +10,11 @@ export default function Cardskip({ item, isSelected, onClick }) {
         { "bg-primary/10 ": isSelected },
       )}
     >
-      <div  onClick={onClick} className="img  mx-auto w-full overflow-hidden  cursor-pointer  rounded-3xl ">
+      <div  onClick={onClick} className="img  mx-auto w-full overflow-hidden  cursor-pointer  rounded-2xl ">
         <img
-          src="/img/innerimg/truck.jpg"
+          src="/truck.jpg"
           alt=""
-          className=" theme-transition-3  size-full object-cover object-center group-hover:scale-[1.1] "
+          className=" transition-all duration-500 ease-in-out  size-full object-cover object-center group-hover:scale-[1.1] "
         />
       </div>
       <div className="mt-4   flex flex-col items-center justify-center gap-4    ">
@@ -27,7 +27,7 @@ export default function Cardskip({ item, isSelected, onClick }) {
         </div>
         <button
           onClick={onClick}
-          className=" rounded-full bg-primary/80 px-4 py-2  cursor-pointer  text-white  group-hover:bg-primary/90 "
+          className=" rounded-full bg-primary px-4 py-2  cursor-pointer  text-white  group-hover:bg-primary/90 "
         >
           Buy Now
         </button>

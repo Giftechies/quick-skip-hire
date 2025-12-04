@@ -46,9 +46,9 @@ export const Skipcard = ({ item, onClick, setValue }) => {
     <div className="min-h-[25rem] w-[18rem] rounded-xl shadow-md bg-white p-6">
       <div  onClick={handleBuy}  className="img mx-auto w-full cursor-pointer overflow-hidden rounded-3xl">
         <img
-          src="/img/innerimg/truck.jpg"
+          src="/truck.jpg"
           alt=""
-          className="theme-transition-3 size-full object-cover object-center group-hover:scale-[1.1]"
+          className="transition-all duration-500 ease-in-out size-full object-cover object-center group-hover:scale-[1.1]"
         />
       </div>
 
@@ -80,7 +80,7 @@ export const Skipcard = ({ item, onClick, setValue }) => {
 
         <button
           onClick={handleBuy}
-          className="rounded-full bg-primary/80 px-4 py-2 text-white group-hover:bg-white group-hover:text-primary"
+          className="rounded-full bg-primary px-4 py-2 text-white group-hover:bg-white group-hover:text-primary"
         >
           Buy Now
         </button>

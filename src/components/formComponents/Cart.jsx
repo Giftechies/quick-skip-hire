@@ -53,15 +53,15 @@ useEffect(() => {
               height={100}
               width={100}
               alt="logo"
-              src={"/img/innerimg/lorry.png"}
-              className="w-full h-full object-contain object-center"
+              src={"/truck.jpg"}
+              className="w-full h-full object-cover object-center"
             />
           </div>
-          <div className="flex flex-1 justify-between items-center">
-            <h3 className="h4 mb-4 text-black-2 font-semibold text-center">
+          <div className="flex flex-col flex-1 justify-between items-center">
+            <h3 className="h4  text-black-2 font-semibold text-center">
               Skip-{skipsize?.size}
             </h3>
-            <span>£{skipsize?.rate || 0}</span>
+            <div className="w-full flex justify-end" ><span>£{skipsize?.rate || 0}</span></div>
           </div>
         </div>
 

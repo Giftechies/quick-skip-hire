@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import Cardskip from "./Cardskip";
 import { Skipcard } from "./Skipcard";
+import { Skeleton } from "../ui/skeleton";
+import { LoaderCircle } from "lucide-react";
 
 export default function Skip({ goToNextStep }) {
   const { watch, setValue } = useFormContext();
@@ -54,19 +56,15 @@ export default function Skip({ goToNextStep }) {
   };
 
   return (
-    <section className="skip grid gap-8  justify-center md:grid-cols-2 lg:grid-cols-3 sm:px-8 lg:px-32">
+    <section className="  skip grid gap-8  justify-center md:grid-cols-2 lg:grid-cols-3 sm:px-8 lg:px-32">
       {loading
-        ? // ✅ Skeleton loader UI
-          Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="animate-pulse rounded-lg border p-4 space-y-4 bg-gray-100"
-            >
-              <div className="min-h-100 w-[18rem] bg-gray-300 rounded"></div>
-              <div className="min-h-100 w-[18rem] bg-gray-300 rounded "></div>
-              <div className="min-h-100 w-[18rem] bg-gray-300 rounded "></div>
+      ?
+            <div className=" p-4 min-h-80 w-[16rem]  rounded-md " >
+              <div className=" absolute inset-0  z-50 w-full bg-black/20 h-full flex  flex-col items-center justify-center " >
+                    <LoaderCircle className="  animate-spin size-12  " />
+                    Loading...
+              </div>
             </div>
-          ))
         : data.map((item, id) =>
             type === "roll and roll off" ? (
               <Skipcard

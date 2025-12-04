@@ -23,12 +23,7 @@ export default function PostDetails({ jobtype = [], slots = [] }) {
 const [selectedPermit,setselectedPermit] = useState(watch("permitOnHighway") || '')
 const [selectedPostcode,setselectedPostcode] = useState(watch("postcodeArea") || "")
 
-useEffect(()=>{
- setselectedPermit(watch('permitOnHighway'));
- setselectedPostcode(watch('postcodeArea'))
- console.log(selectedPermit,'selectedPermit');
 
-},[selectedPermit,selectedPostcode])
   const [loading, setLoading] = useState(false);
 
   // Default fallback options if jobtype prop is empty
@@ -42,7 +37,7 @@ useEffect(()=>{
   ];
 
   return (
-    <div className="space-y-8 postdetails">
+    <div className="space-y-8 postdetails ">
       <h5 className="h5 text-center">
         <span className="font-semibold text-primary">Step 2:</span> Please
         Indicate your skip requirements below
@@ -142,19 +137,19 @@ useEffect(()=>{
           Will the skip be placed on a public highway?
         </span>
 
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col  items-center justify-center">
           <div className="flex gap-4">
             {/* Yes Option */}
             <label
               className={cn(
                 "cursor-pointer h6 rounded-full border-2 border-primary px-6 py-2 font-semibold transition-colors",
-                { "bg-gray-300 text-primary": selectedPermit === "Yes" }
+                { "bg-primary/30 text-primary": selectedPermit === "Yes" }
               )}
             >
               <input
                 type="radio"
                 value="Yes"
-                 onClick={()=>setselectedPermit("YEs")}
+                 onClick={()=>setselectedPermit("Yes")}
                 {...register("permitOnHighway", {
                   required: "Please select an option",
                 })}
@@ -167,7 +162,7 @@ useEffect(()=>{
             <label
               className={cn(
                 "cursor-pointer h6 rounded-full border-2 border-primary px-6 py-2 font-semibold transition-colors",
-                { "bg-primary/10 text-primary": selectedPermit === "No" }
+                { "bg-primary/30 text-primary": selectedPermit === "No" }
               )}
             >
               <input
@@ -191,7 +186,7 @@ useEffect(()=>{
 
           {/* Logic: Show P Tag on Yes Click */}
           {selectedPermit === "Yes" && (
-            <div className="w-full md:w-[60%] bg-zinc-100 mt-8 rounded-lg p-6  animate-in fade-in slide-in-from-top-2">
+            <div className={cn("w-fit md:w-96 bg-zinc-100 mt-8 rounded-lg p-6  animate-in fade-in slide-in-from-top-2 h-0 transition-all duration-500 es ",{"h-40":selectedPermit==="Yes"})}>
               <p className="font-medium text-zinc-800">
                 As your skip requires a licence to be kept on the road, please
                 call the number below so we can get the correct information from

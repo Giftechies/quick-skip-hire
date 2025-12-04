@@ -78,12 +78,19 @@ const BoonkingOnline = () => {
     { title: "Cart", component: <Cart /> },
    
   ];
+  
   const nextStep = async () => {
+    const permit = methods.watch("permitOnHighway")
     const isValid = await methods.trigger(); // for now: validate all fields
     const type = methods.watch("jobType");
     if (type.trim().toLowerCase() === "skip collection") {
       navigate.push("/collection"); // <-- redirects user
       return; // stop further steps
+    }
+    if(permit ==="Yes" && currentStep>0){
+      toast.error("Not allowed.Please call us!")
+      return;
+  
     }
     if (isValid && currentStep < steps.length - 1) {
       setCurrentStep((s) => s + 1);
@@ -125,7 +132,7 @@ const BoonkingOnline = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="container  z-30  py-8    flex flex-col items-center gap-8 rounded-lg  bg-white  shadow-md"
+          className="container relative  z-30  py-8    flex flex-col items-center gap-8 rounded-lg  bg-white  shadow-md"
         >
                <div className=" z-30  top-3 container  mx-auto  bg-whit  flex justify-between items-center " >
                             <Image src={'/logo.png'} width={150}  height={10} className="h-24" alt="brand-logo" />
@@ -173,7 +180,7 @@ const BoonkingOnline = () => {
             ) : (
               <button
                 type="submit"
-                className=" rounded-full bg-primary-blue px-4 py-2 text-white"
+                className=" rounded-full bg-primaryblue px-4 py-2 text-white"
               >
                 Submit
               </button>

@@ -1,21 +1,17 @@
-// FormField.jsx (using the name you provided: Formfeild)
 "use client";
-import { useFormContext } from "react-hook-form";
-import { Input } from "../ui/input"; // Assuming this is your styled Input component
+import { useFormContext, get } from "react-hook-form";
+import { Input } from "../ui/input";
 
-export default function Formfeild({ // Renamed to Formfeild to match your import
+export default function Formfeild({
   labelText,
   fieldName,
   type = "text",
   placeholder = "",
-  // Add required validation rule here for clarity and reusability
-  required = false, 
+  required = false,
 }) {
-  const { register, formState: { errors } } = useFormContext(); 
-  
-  // Use bracket notation to safely access nested error object
-  const error = errors[fieldName] || (fieldName.includes('.') ? errors[fieldName.split('.')[0]]?.[fieldName.split('.')[1]] : null);
+  const { register, formState: { errors } } = useFormContext();
 
+  const error = get(errors, fieldName);
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -28,18 +24,15 @@ export default function Formfeild({ // Renamed to Formfeild to match your import
         id={fieldName}
         type={type}
         placeholder={placeholder}
-        // ✅ CORRECT USAGE: Pass validation rules directly into register
-        {...register(fieldName, { 
-            required: required ? `${labelText} is required` : false,
-            // Add custom validation rules here (e.g., pattern for email)
-        })} 
-        className={`border placeholder:text-black/80 p-2 rounded ${error ? 'border-red-500' : ''}`}
+        {...register(fieldName, {
+          required: required ? `${labelText} is required` : false,
+        })}
+        className={`border placeholder:text-black/80 p-2 rounded ${
+          error ? "border-red-500" : ""
+        }`}
       />
-      
-      {/* 🛑 Display Error Message */}
-      {error && (
-        <p className="text-red-500 text-sm mt-1">{error.message}</p>
-      )}
+
+      {error && <p className="text-red-500 text-sm mt-1">{error.message}fg</p>}
     </div>
   );
 }
