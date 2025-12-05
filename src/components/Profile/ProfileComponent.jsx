@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import ProfileSideBar from "./ProfileSideBar"
-import Orders from "./Orders"
+import Order from "./Order"
 import MyProfile from "./MyProfile"
 import { ProfileFetch } from "@/app/apiCalls/form"
 
@@ -14,8 +14,8 @@ export default function ProfileComponent({ id }) {
     const [currentStep, setCurrentStep] = useState(0)
     const [user, setuser] = useState()
     const components = [
-        { label: "My Profile", component: <MyProfile  user={user} getUserDetail={getUserDetail}  /> },
-        { label: "Orders", component: <Orders id={id} /> },
+        { label: "My Profile", component: <MyProfile user={user} getUserDetail={getUserDetail} /> },
+        { label: "Orders", component: <Order id={id} /> },
     ]
 
 
@@ -31,8 +31,6 @@ export default function ProfileComponent({ id }) {
                     {components[currentStep].component}
                 </div>
             </main>
-
-
         </section>
     )
 }

@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -61,18 +62,18 @@ useEffect(() => {
             <h3 className="h4  text-black-2 font-semibold text-center">
               Skip-{skipsize?.size}
             </h3>
-            <div className="w-full flex justify-end" ><span>£{skipsize?.rate || 0}</span></div>
+            <div className="w-full h6 flex justify-end" ><span>£{skipsize?.rate || 0}</span></div>
           </div>
         </div>
 
         {/* Extras */}
         <div className="w-full flex flex-col gap-4 h6 font-semibold">
-          { extras && <label className=" "  > Extra </label>}
-          <div>
-            {Object.entries(extras).map(([id, data]) => (
-              <label key={id} className="flex  justify-between gap-8">
-                <span className="w-44 block text-gray-500 text-[14px]">{id}</span>
-                <span className="block flex-1 text-gray-500 text-[14px] " >
+          <div className=" border-y py-1 " >
+          { extras && <label className=" mb-2 block "  > Extra </label>}
+            {Object.entries(extras).map(([id, data],idx) => (
+            <label key={id} className={cn(`flex items-center justify-between mb-1 gap-8 text-black `,{" text-black/70 ":idx%2===0})}>
+                <span className={cn(`w-44 block text-black/80 text-[14px]`,{"text-black/50":idx%2===0})}>{id}</span>
+                <span className={cn(`block text-black/80 text-[14px]`,{"text-black/50":idx%2===0})} >
                   {data.qty} × £{data.price}
                 </span>
                 <span className="block ">£{data.qty * data.price}</span>
@@ -92,7 +93,7 @@ useEffect(() => {
             <span>£{vat.toFixed(2)}</span>
           </label>
 
-          <label className="flex justify-between">
+          <label className="flex justify-between border-t-2 pt-1  font-semibold text-black">
             <span className="text-gray-500 text-[14px]">Total</span>
             <span>£{total.toFixed(2)}</span>
           </label>

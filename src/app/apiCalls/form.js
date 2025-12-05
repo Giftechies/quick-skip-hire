@@ -316,10 +316,13 @@ export async function ProfileFetch({id}){
         
     }
 }
-
-export async function fetchOrder(id){
+// fetch all orders for user by user id
+export async function fetchAllOrders(id){
     try {
-        const res = await fetch(`/api/orders/${id}`)
+        const res = await fetch(`/api/orders/${id}`,{
+            method:"GET",
+            cache:'no-store'
+        })
         const data =await res.json();
         if(!res.ok){
             return{

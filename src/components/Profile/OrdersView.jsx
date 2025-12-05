@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchOrder } from "@/app/apiCalls/form";
+import { fetchAllOrders } from "@/app/apiCalls/form";
 import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaClock, FaTag, FaRulerCombined, FaMapMarkerAlt, FaRoad, FaDollarSign, FaInfoCircle, FaPlusCircle } from 'react-icons/fa'; // Importing icons
 
@@ -20,7 +20,7 @@ export default function Orders({ id }) {
   const loadOrders = async () => {
     try {
       setLoading(true);
-      const res = await fetchOrder(id);
+      const res = await fetchAllOrders(id);
       // Ensure res.data is an array before setting state
       setOrders(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
