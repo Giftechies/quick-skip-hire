@@ -18,7 +18,7 @@ export async function middleware(req){
   if(!token){
     token = req.headers.get('Authorization')?.startsWith('Bearer ') ? req.headers.get('Authorization').split(' ')[1] : null;
     if(!token){
-      if(authorized_user_paths.includes(req.nextUrl.pathname) || admin_only_paths.includes(req.nextUrl.pathname)){
+      if(req.nextUrl.pathname.startsWith("/quick-skip/admin") || admin_only_paths.includes(req.nextUrl.pathname)){
         url.pathname = '/login';
         return NextResponse.redirect(url);
       }
@@ -49,7 +49,7 @@ if(userRole !== 'admin'){
 }
 
 if(userRole === 'admin'){
-  if(authorized_user_paths.includes(req.nextUrl.pathname)){
+  if(authorized_user_paths.startsWith(req.nextUrl.pathname)){
     url.pathname = '/quick-skip/admin';
     return NextResponse.redirect(url);
   }

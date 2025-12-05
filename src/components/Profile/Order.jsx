@@ -1,71 +1,87 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { fetchAllOrders } from "@/app/apiCalls/form";
 import { Eye } from "lucide-react";
 import { format } from "date-fns";
 
-
-
-export default function Order({ id }) {
+export default function Order({ id, setSelectedOrder }) {
     const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const fetchAllorder = async () => {
-        const res = await fetchAllOrders(id);
-        console.log("Orders fetched:", res);
-        setOrders(res.data);
-    }
+        try {
+            setLoading(true);
+            const res = await fetchAllOrders(id);
+
+            if (res?.success) {
+                setOrders(res.data);
+            } else {
+                setOrders([]);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchAllorder();
-    }, [])
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+
     return (
         <div>
-            <h5 className="h4 font-semibold " >Order History</h5>
+            <h5 className="h4 font-semibold">Order History</h5>
+
             <Table>
                 <TableHeader>
                     <TableRow>
-                        {orderHeaders?.map((headers, idx) => (
-                            <TableHead key={idx} >
-                                <span>{headers}</span>
+                        {orderHeaders.map((header, idx) => (
+                            <TableHead key={idx}>
+                                <span>{header}</span>
                             </TableHead>
                         ))}
-
                     </TableRow>
                 </TableHeader>
 
                 <TableBody>
-                    {orders?.map((order, idx) => (
-                        <TableRow>
-                            <TableCell key={idx} >
-                                <span>{order._id}</span>
-                            </TableCell>
-                            <TableCell>
-                                <span>{Dateformate(order.deliveryDate)}</span>
-                            </TableCell>
-                            <TableCell>
-                                <span className="capitalize" >{order.adminOrderStatus.toLowerCase()!=="delevired"?"Processing":"Done" || "N/A"}</span>
-                            </TableCell>
-                            <TableCell>
-                                <span>${order.totalamount || "0.00"}</span>
-                            </TableCell>
-                            <TableCell className={''} >
-                                <Eye className="w-4 h-4 cursor-pointer text-indigo-500" />
-                            </TableCell>
+                    {orders.map((order) => {
+                        const isDelivered =
+                            order.adminOrderStatus?.toLowerCase() === "delivered";
 
-                        </TableRow>
-                    ))}
+                        return (
+                            <TableRow key={order._id}>
+                                <TableCell>{order._id}</TableCell>
+
+                                <TableCell>{Dateformate(order.deliveryDate)}</TableCell>
+
+                                <TableCell className="capitalize">
+                                    {isDelivered ? "Done" : "Processing"}
+                                </TableCell>
+
+                                <TableCell>${order.totalamount || "0.00"}</TableCell>
+
+                                <TableCell>
+                                    <Eye
+                                        onClick={() => setSelectedOrder(order)}
+                                        className="w-4 h-4 cursor-pointer text-indigo-500"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
                 </TableBody>
             </Table>
         </div>
-    )
+    );
 }
-
 
 const orderHeaders = ["Order ID", "Delivery Date", "Status", "Total Amount", "Action"];
 
-// Example date formatting function
-const Dateformate = (dateString,pattern="dd MMM, yyyy") => {
-    if (!dateString) return "N/A";
-    const data = new Date(dateString);
-    if (isNaN(data.getTime())) return "N/A";
-    return format(data, pattern);
-}
+const Dateformate = (date, pattern = "dd MMM, yyyy") => {
+    if (!date) return "N/A";
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "N/A";
+    return format(d, pattern);
+};

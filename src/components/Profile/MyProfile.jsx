@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { ProfileUpdate } from "@/app/apiCalls/form";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
-export default function MyProfile({ user,getUserDetail }) {
+export default function MyProfile({ user,getUserDetail, }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -37,6 +38,12 @@ export default function MyProfile({ user,getUserDetail }) {
     
 
   };
+
+  if(!user){
+    return <div className="flex flex-col w-full h-full" >
+      <Loader2 className=" animate-spin text-black " />
+      Loading...</div>
+  }
 
 
   return (
