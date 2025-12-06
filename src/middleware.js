@@ -17,8 +17,12 @@ export async function middleware(req){
   if(!token){
     token = req.headers.get('Authorization')?.startsWith('Bearer ') ? req.headers.get('Authorization').split(' ')[1] : null;
     if(!token){
-      if(req.nextUrl.pathname.startsWith("/quick-skip/admin")|| req.nextUrl.pathname.startsWith("/profile")  ){
+      if(req.nextUrl.pathname.startsWith("/profile")  ){
         url.pathname = '/login';
+        return NextResponse.redirect(url);
+      }
+      if(req.nextUrl.pathname.startsWith("/quick-skip/admin")  ){
+        url.pathname = '/admin-login';
         return NextResponse.redirect(url);
       }
       return NextResponse.next();
@@ -35,11 +39,6 @@ if(userRole !== 'admin'){
       url.pathname = '/profile';
       return NextResponse.redirect(url);
     }
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
-  }
-  if(admin_only_api.includes(req.nextUrl.pathname)){
-    return NextResponse.json({success:false, message:"Unauthorized"}, {status:401});
   }
 }
 

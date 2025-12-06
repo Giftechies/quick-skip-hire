@@ -463,3 +463,31 @@ export async function fetchSingleOrder(id){
         };
     }
 }
+
+
+export async function adminLogin(formData){
+    try {
+        const res = await fetch(`${base_url}/api/admin/login`,{
+            method:'POST',
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(formData)
+        })
+        const data = await res.json()
+        if(!res.ok){
+            return{
+                success:false,
+                message:data.message || 'Login failed. Please try again!'
+            }
+        }
+        return{
+            success:true,
+            message:'Login successfully!',
+            data:data
+        }
+    }catch (error) {
+         return {
+            success: false,
+            message: error.message || "Something went wrong!"
+        };
+    }
+}

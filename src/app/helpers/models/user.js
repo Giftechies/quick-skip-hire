@@ -12,6 +12,10 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     index: true,
   },
+  password: {
+    type: String,
+    required: false, // Not required for OTP-based users
+  },
   firstName: {
     type: String,
     required: false, // Optional, but good for personalization
