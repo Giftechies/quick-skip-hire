@@ -107,8 +107,6 @@ const BoonkingOnline = () => {
   const onSubmit = async (data) => {
     console.log("Form Data Submitted: ", data);
    if(currentStep === steps.length-1 && data.totalamount !==null &&  data.totalamount !== 0){
-    console.log("Final form data submitted: ", data);
-
   const result = await createCheckoutSession(data);
   console.log("session result>>>>>",result);
   

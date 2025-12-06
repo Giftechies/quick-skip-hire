@@ -24,7 +24,7 @@ export async function GET(req,){
 
         const order = await Order.findByIdAndUpdate(orderid,{
             paymentStatus:'paid',
-        });
+        },{new:true});
 
         if(!order){
             return NextResponse.json({
@@ -36,7 +36,7 @@ export async function GET(req,){
         console.log(order.paymentStatus);
         
 
-        if(order.paymentStatus !=='paid'){
+        if(order.paymentStatus.trim().toLowerCase() !=='paid'){
             return NextResponse.json({
                 success:false,
                 message:'Payment status is pending.Please try again'

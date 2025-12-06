@@ -4,11 +4,10 @@ import { jwtVerify } from "jose";
 
 
 export async function middleware(req){
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+  const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
   const admin_only_paths = ["/admin", "/quick-skip/admin"];
   const admin_only_api = ['/api/form'];
   const authorized_user_paths = [ "/profile", "/profile/edit" ];
-  const authorized_user_api = [  "/api/order" ];
   const public_paths = ["/login", "/verify-otp", ];
   const url = req.nextUrl.clone();
   
@@ -18,24 +17,20 @@ export async function middleware(req){
   if(!token){
     token = req.headers.get('Authorization')?.startsWith('Bearer ') ? req.headers.get('Authorization').split(' ')[1] : null;
     if(!token){
-      if(req.nextUrl.pathname.startsWith("/quick-skip/admin") || admin_only_paths.includes(req.nextUrl.pathname)){
+      if(req.nextUrl.pathname.startsWith("/quick-skip/admin")|| req.nextUrl.pathname.startsWith("/profile")  ){
         url.pathname = '/login';
         return NextResponse.redirect(url);
-      }
-
-      if(authorized_user_api.includes(req.nextUrl.pathname) || admin_only_api.includes(req.nextUrl.pathname)){
-        return NextResponse.json({success:false, message:"Unauthorized"}, {status:401});
       }
       return NextResponse.next();
   }
 }
 
-const {payload} = await jwtVerify(token,secret);
+const {payload} = await jwtVerify(token,secretKey);
 const userRole = payload?.role?.toLowerCase().trim( );
 
 
 if(userRole !== 'admin'){
-  if(admin_only_paths.includes(req.nextUrl.pathname)){
+  if(req.nextUrl.pathname.startsWith("/quick-skip/admin")){
     if(userRole==='customer'){
       url.pathname = '/profile';
       return NextResponse.redirect(url);
@@ -49,7 +44,7 @@ if(userRole !== 'admin'){
 }
 
 if(userRole === 'admin'){
-  if(authorized_user_paths.startsWith(req.nextUrl.pathname)){
+  if(req.nextUrl.pathname.startsWith("/profile")){
     url.pathname = '/quick-skip/admin';
     return NextResponse.redirect(url);
   }

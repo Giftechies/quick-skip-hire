@@ -35,8 +35,10 @@ export async function POST(request) {
             message:'Insuficient data provided!!'
         },{status:500});
     };
-
+  
+    
     let user = await User.findOne({email:customer.email});
+
 
     if(!user){
         user = await User.create({
@@ -79,7 +81,7 @@ export async function POST(request) {
       {
         price_data: {
           currency: 'gbp', // change to your currency
-          product_data: { name: `Order ${order._id}` },
+          product_data: { name: `Order Id ${order._id}` },
           unit_amount: Math.round(totalamount * 100), // in pence
         },
         quantity: 1,
@@ -103,7 +105,7 @@ export async function POST(request) {
     order.stripeSessionId = session.id;
     await order.save();
 
-    return NextResponse.json({ success: true, url: session.url, sessionId: session.id });
+    return NextResponse.json({ success: true, url: session.url, sessionId: session.id,orderId:order._id.toString()  },{status:200});
   } catch (err) {
     console.error('Create checkout session error', err);
     return NextResponse.json({ success: false, message: `${err.message}` }, { status: 500 });
