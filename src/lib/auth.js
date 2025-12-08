@@ -15,6 +15,7 @@ export async function getuserDetails(){
    } catch (error) {
     return null;
     
+    
    }
 
    
