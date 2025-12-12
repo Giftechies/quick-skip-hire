@@ -1,56 +1,65 @@
-import Stripe from "stripe";
 import { ConnectDb } from "@/app/helpers/DB/db";
 import Order from "@/app/helpers/models/order";
+import { xml2js } from "xml-js";
 
-//  Force Node runtime (required for raw body)
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
-});
-
 export async function POST(request) {
-  const sig = request.headers.get("stripe-signature");
-
-  // Read raw body exactly as Stripe sends it
-  const rawBody = await request.text();
-
-  let event;
-  
-  
   try {
-    event = stripe.webhooks.constructEvent(
-      rawBody,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (error) {
-    return new Response(`Webhook signature failed: ${error.message}`, {
-      status: 400,
-    });
-  }
-  console.log('webhook is runing',event);
+    const rawXml = await request.text();
 
-  // Handle event types
-  if (event.type === "checkout.session.completed") {
-    try {
-      await ConnectDb();
+    // Convert XML → JS object
+    const parsed = xml2js(rawXml, { compact: true, trim: true });
 
-      const session = event.data.object;
-      const orderId = session.metadata.orderId;
+    const event =
+      parsed?.paymentService?.notify?.orderStatusEvent;
 
-      await Order.findByIdAndUpdate(orderId, {
-        paymentStatus: "paid",
-        stripePaymentIntentId: session.payment_intent,
-      });
-
-      console.log("Order updated successfully:", orderId);
-    } catch (error) {
-      console.error("Database error:", error);
-      return new Response("Database error", { status: 500 });
+    if (!event) {
+      return new Response("Invalid Webhook", { status: 400 });
     }
-  }
 
-  return new Response("OK", { status: 200 });
+    const orderCode = event?._attributes?.orderCode;
+    const lastEvent =
+      event?.payment?.lastEvent?._text || "UNKNOWN";
+
+    // Connect DB
+    await ConnectDb();
+
+    // Map Worldpay status → your DB status
+    let paymentStatus = "pending";
+
+    if (lastEvent === "AUTHORISED") {
+      paymentStatus = "paid";
+    } else if (lastEvent === "REFUSED") {
+      paymentStatus = "failed";
+    } else if (lastEvent === "CANCELLED") {
+      paymentStatus = "cancelled";
+    } else {
+      paymentStatus = "error";
+    }
+
+    // Update your order using stored worldpayOrderCode
+    const order = await Order.findOneAndUpdate(
+      { worldpayOrderCode: orderCode },
+      { paymentStatus },
+      { new: true }
+    );
+
+    if (!order) {
+      console.error("No matching order for:", orderCode);
+      return new Response("Order not found", { status: 404 });
+    }
+
+    console.log("Worldpay webhook processed:", {
+      orderCode,
+      paymentStatus,
+    });
+
+    return new Response("OK", { status: 200 });
+
+  } catch (err) {
+    console.error("Worldpay webhook error:", err);
+    return new Response("Webhook error", { status: 500 });
+  }
 }

@@ -46,6 +46,7 @@ const OrderSchema = new mongoose.Schema(
       enum:['new',"processing","complete"],
       default :'new'
     },
+    worldpayOrderCode: { type: String },
  paymentStatus: {
   type: String,
   enum: ['pending','paid','failed'],
