@@ -18,7 +18,7 @@ export default function ProfileComponent({ id }) {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const components = [
         { label: "My Profile", component: <MyProfile user={user} getUserDetail={getUserDetail} /> },
-        { label: "Orders", component: <Order id={id} setSelectedOrder={setSelectedOrder}  /> },
+        { label: "Orders", component: <Order id={id} setSelectedOrder={setSelectedOrder} /> },
     ]
 
 
@@ -31,14 +31,14 @@ export default function ProfileComponent({ id }) {
     return (
         <section className="container p-0!   my-8" >
             <main className="flex gap-8 relative  " >
-                
-              {!user ? <div className="flex flex-col items-center justify-center w-full h-full" >
-      <Loader2 className=" animate-spin text-black " />
-      Loading...</div> :(<> <ProfileSideBar setSelectedOrder={setSelectedOrder}  user={user} components={components} currentStep={currentStep} SetcurrentStep={setCurrentStep} />
-                <div className="  h-250 w-full p-6 " >
-                    {Content}
-                </div></>)}
-               
+
+                {!user ? <div className="flex flex-col items-center justify-center w-full h-full" >
+                    <Loader2 className=" animate-spin text-black " />
+                    Loading...</div> : (<> <ProfileSideBar setSelectedOrder={setSelectedOrder} user={user} components={components} currentStep={currentStep} SetcurrentStep={setCurrentStep} />
+                        <div className="  h-250 w-full p-6 " >
+                            {Content}
+                        </div></>)}
+
             </main>
         </section>
     )

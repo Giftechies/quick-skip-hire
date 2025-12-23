@@ -62,8 +62,6 @@ export async function POST(request) {
       await user.save();
     }
 
-    // const token = crypto.randomBytes(32).toString("hex");
-
     const token = jwt.sign({
       userId: user._id,
       role: user.role,
@@ -94,7 +92,7 @@ export async function POST(request) {
           email: user.email,
           phone: user.phoneNumber,
           role: user.role,
-        }
+        },token
       }),
       {
         status: 200,

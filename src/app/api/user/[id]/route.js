@@ -53,14 +53,8 @@ export async function PUT(req,{params}){
         }
 
         const {email,firstName,lastName,phoneNumber} = await req.json();
-
-        console.log(email,firstName,lastName,phoneNumber);
-        
-
         const user = await User.findByIdAndUpdate(id,{email,firstName,lastName,phoneNumber}, { new: true })
-        console.log(user,"user>>>");
-        
-
+  ;
         if(!user){
             return NextResponse.json({
                 success:false,
@@ -75,7 +69,6 @@ export async function PUT(req,{params}){
         })
         
     } catch (error) {
-
         return NextResponse.json({
             success:false,
             message:error.message || "something went worng"
