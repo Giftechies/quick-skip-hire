@@ -71,7 +71,7 @@ export async function GET(req) {
     }
 
     // 4️⃣ Fetch orders
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 }).select('-customer');
 
     return NextResponse.json({
       success: true,
