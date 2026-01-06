@@ -265,7 +265,7 @@ export async function ProfileUpdate(id,formData){
             method:"PUT",
             body: JSON.stringify(formData) ,
             headers:{
-                'Content-Type':"applicaton/json"
+                'Content-Type':"application/json"
             }
         })
         const data = await res.json()
