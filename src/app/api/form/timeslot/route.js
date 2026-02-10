@@ -30,7 +30,7 @@ export async function GET(req){
         const slots = await timeslot.find();
         return NextResponse.json({success:true, data:slots}, {status:200});
         
-    } catch (error) {
+    } catch (err) {
         return NextResponse.json({ error: err.message }, { status: 500 });
         
     }

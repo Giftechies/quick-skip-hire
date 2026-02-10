@@ -8,7 +8,7 @@ import PostDetails from "./PostDetails";
 import Skip from "./Skip";
 import ProgressBar from "./ProgressBar";
 import { useRouter } from "next/navigation";
-import { Fetchjobtype, Fetchextra,FetchTimeSlots, createCheckoutSession } from "@/app/apiCalls/form";
+import { Fetchjobtype, Fetchextra, FetchTimeSlots, createCheckoutSession } from "@/app/apiCalls/form";
 import UserInfo from "./UserInfo";
 import toast from "react-hot-toast";
 import Image from "next/image";
@@ -49,14 +49,14 @@ const BoonkingOnline = () => {
       const fetchtime = await FetchTimeSlots();
       setFetchedTimeSlots(fetchtime.data);
 
-    
+
       if (
         extrares.success &&
         Array.isArray(extrares.data) &&
         extrares.data.length > 0
       ) {
         setfetchextra(extrares.data);
-      
+
       }
     })();
   }, []);
@@ -76,9 +76,9 @@ const BoonkingOnline = () => {
     { title: "Extras", component: <Extra EXTRAS={fetchextra} /> },
     { title: "UserInfo", component: <UserInfo /> },
     { title: "Cart", component: <Cart /> },
-   
+
   ];
-  
+
   const nextStep = async () => {
     const permit = methods.watch("permitOnHighway")
     const isValid = await methods.trigger(); // for now: validate all fields
@@ -87,15 +87,15 @@ const BoonkingOnline = () => {
       navigate.push("/collection"); // <-- redirects user
       return; // stop further steps
     }
-    if(permit ==="Yes" && currentStep>0){
+    if (permit === "Yes" && currentStep > 0) {
       toast.error("Not allowed.Please call us!")
       return;
-  
+
     }
     if (isValid && currentStep < steps.length - 1) {
       setCurrentStep((s) => s + 1);
     }
-   
+
   };
 
   const prevStep = () => {
@@ -106,39 +106,39 @@ const BoonkingOnline = () => {
 
   const onSubmit = async (data) => {
     console.log("Form Data Submitted: ", data);
-   if(currentStep === steps.length-1 && data.totalamount !==null &&  data.totalamount !== 0){
-  const result = await createCheckoutSession(data);
-  console.log("session result>>>>>",result);
-  
-
-  if (result.success) {
-    window.location.href = result.url;
-  } else {
-    toast.error("Payment session error :" + result.message);
-  }
+    if (currentStep === steps.length - 1 && data.totalamount !== null && data.totalamount !== 0) {
+      const result = await createCheckoutSession(data);
+      console.log("session result>>>>>", result);
 
 
-   }
-};
+      if (result.success) {
+        window.location.href = result.url;
+      } else {
+        toast.error("Payment session error :" + result.message);
+      }
+
+
+    }
+  };
 
 
   return (
     <div className="relative py-20 min-h-screen  " >
-        <Image src={'/bgPic.webp'} width={250} height={250} alt="banner-pic" className="w-full h-full inset-0 absolute -z-20 object-center object-cover " />
-        <div className="bg-[#0b1d54]/80 w-full absolute inset-0 -z-10" />
+      <Image src={'/bgPic.webp'} width={250} height={250} alt="banner-pic" className="w-full h-full inset-0 absolute -z-20 object-center object-cover " />
+      <div className="bg-[#0b1d54]/80 w-full absolute inset-0 -z-10" />
 
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
           className="container relative  z-30  py-8    flex flex-col items-center gap-8 rounded-lg  bg-white  shadow-md"
         >
-               <div className=" z-30  top-3 container  mx-auto  bg-whit  flex justify-between items-center " >
-                            <Image src={'/logo.png'} width={150}  height={10} className="h-24" alt="brand-logo" />
-            
-                          <Button onClick={()=>route.push("/profile")} className={'w-fit h-full cursor-pointer '} >
-                              <UserCircleIcon className={'w-8 h-8 size-8 '} />
-                          </Button>
-                            </div>  
+          <div className=" z-30  top-3 container  mx-auto  bg-whit  flex justify-between items-center " >
+            <Image src={'/logo.png'} width={150} height={10} className="h-24" alt="brand-logo" />
+
+            <Button onClick={() => route.push("/profile")} className={'w-fit h-full cursor-pointer '} >
+              <UserCircleIcon className={'w-8 h-8 size-8 '} />
+            </Button>
+          </div>
           <h1 className="h2 title-animation text-center  font-oswald     ">
             Your Skip, Ready to Hire
           </h1>
@@ -188,7 +188,7 @@ const BoonkingOnline = () => {
       </FormProvider>
     </div>
 
- 
+
   );
 };
 

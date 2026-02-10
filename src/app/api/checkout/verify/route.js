@@ -10,7 +10,7 @@ export async function GET(req,){
     try {
         // const param = await params
          const { searchParams } = new URL(req.url);
-    const sessionId = searchParams.get("session_id");
+        const sessionId = searchParams.get("session_id");
 
         if(!sessionId){
             return NextResponse.json({
