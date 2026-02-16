@@ -7,13 +7,15 @@ import Link from "next/link";
 export default function CheckoutSuccess() {
   const params = useSearchParams();
   const sessionId = params.get("session_id");
+  const orderId = params.get("order_id");
+  const mail = params.get("mail");
 
   const [status, setStatus] = useState("Verifying payment…");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!sessionId) {
+    if (!sessionId && !orderId) {
       setStatus("Error: No session found.");
       setIsSuccess(false);
       setIsLoading(false);
@@ -22,7 +24,7 @@ export default function CheckoutSuccess() {
 
     const verify = async () => {
       try {
-        const res = await fetch(`/api/checkout/verify?session_id=${sessionId}`, {
+        const res = await fetch(`/api/checkout/verify?session_id=${sessionId}&order_id=${orderId}&mail=${mail}`, {
           method: "GET",
           cache: "no-store",
         });

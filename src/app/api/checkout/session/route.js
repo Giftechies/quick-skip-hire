@@ -10,6 +10,8 @@ import User from '@/app/helpers/models/user';
 export async function POST(request) {
   await ConnectDb();
 
+  const origin = request.nextUrl.origin;
+
   try {
     const body = await request.json();
     // body should have order details: items, total, customer (email), etc.
@@ -102,7 +104,7 @@ export async function POST(request) {
     // });
 
     const customerTransectionId = `${customer.email.replace(/[^a-zA-Z0-9]/g, '')}-${customer.firstName}-${customer.phoneNumber}-${(new Date()).toISOString().replace(/[-:.TZ]/g, '')}`;
-
+    console.log(`${process.env.USER} ${process.env.userPassword} ${process.env.entity} `);
     const values = {
       method: 'POST',
       headers: {
@@ -113,26 +115,27 @@ export async function POST(request) {
         'Authorization': 'Basic ' + Buffer.from(`${process.env.USER}:${process.env.userPassword}`).toString('base64')
       },
       body: JSON.stringify({
-        transactionReference: order._id.toString(),
+        transactionReference: `${order._id}${(new Date()).toISOString().replace(/[-:.TZ]/g, '')}`,
         merchant: { entity: `${process.env.entity}` },
         narrative: {
           line1: `payment of ${totalamount}gbp`,
         },
         value: {
           currency: 'gbp',
-          amount: totalamount
+          amount: (totalamount * 100)
         },
         resultURLs: {
-          successURL: `${process.env.HOST_URL || 'http://localhost:3000'}/checkout/success`,
-          cancelURL: `${process.env.HOST_URL || 'http://localhost:3000'}/checkout/cancel`,
-          failureURL: `${process.env.HOST_URL || 'http://localhost:3000'}/checkout/failure`,
-          errorURL: `${process.env.HOST_URL || 'http://localhost:3000'}/checkout/error`,
-          expiryURL: `${process.env.HOST_URL || 'http://localhost:3000'}/checkout/expiry`
-
+          successURL: `${origin || 'http://localhost:3000'}/checkout/success?session_id=${order._id}${(new Date()).toISOString().replace(/[-:.TZ]/g, '')}&order_id=${order._id}&mail=${customer.email}`,
+          cancelURL: `${origin || 'http://localhost:3000'}/checkout/cancel`,
+          failureURL: `${origin || 'http://localhost:3000'}/checkout/failure`,
+          errorURL: `${origin || 'http://localhost:3000'}/checkout/error`,
+          expiryURL: `${origin || 'http://localhost:3000'}/checkout/expiry`
         },
         expiry: process.env.expiry // 15 minutes in seconds 
       })
     };
+
+    // console.log('Creating payment page with values:', values);
 
     const resp = await fetch('https://try.access.worldpay.com/payment_pages', values);
     const data = await resp.json();

@@ -1,20 +1,5 @@
 // utils/emailService.js
-
-import nodemailer from 'nodemailer';
-
-// --- NODEMAILER TRANSPORTER CONFIGURATION ---
-// This object handles the connection details to the SMTP server (Mailtrap)
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST, 
-  port: process.env.SMTP_PORT, 
-  // Mailtrap usually does not require a secure (TLS) connection on its default development ports
-  secure: process.env.SMTP_PORT == 465, // Only set secure: true if using port 465/587 with SSL/TLS
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
+import { Resend } from 'resend';
 /**
  * Sends the OTP code to the specified email address using the configured SMTP transporter.
  * @param {string} email - The recipient's email address.
@@ -38,10 +23,14 @@ export async function sendOTPEmail(email, otp) {
       text: `Your one-time login code is ${otp}. It expires in ${OTP_EXPIRY_MINUTES} minutes.`,
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    
+    console.log(`Attempting to send OTP email to ${email} with code ${otp}`);
+
+    const resend = new Resend(process.env.Resent_API);
+
+    const info = await resend.emails.send(mailOptions);
+
     // Log the message ID to find the email in your Mailtrap inbox
-    console.log(`Email sent to ${email}. Message ID: ${info.messageId}`); 
+    console.log(`Email sent to ${email}. Message ID: ${info.messageId}`);
     return true;
 
   } catch (error) {

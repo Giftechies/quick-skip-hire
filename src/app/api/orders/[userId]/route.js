@@ -5,7 +5,7 @@ import { ConnectDb } from "@/app/helpers/DB/db";
 export async function GET(req, { params }) {
   try {
     await ConnectDb();
-    const { userId } =await params;
+    const { userId } = await params;
 
     if (!userId) {
       return NextResponse.json(
